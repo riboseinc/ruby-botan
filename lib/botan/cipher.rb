@@ -89,6 +89,7 @@ module Botan
       rc = LibBotan.botan_cipher_update(@ptr, flags, out_buf, out_buf.size,
                                          out_written_ptr, input_buf, input_buf.size,
                                          inp_consumed_ptr)
+      raise if rc != 0
       raise if inp_consumed_ptr.read(:size_t) != inp.bytesize
       out_buf.read_bytes(out_written_ptr.read(:size_t))
     end
