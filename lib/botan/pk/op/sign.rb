@@ -22,6 +22,10 @@ module Botan
         raise if rc != 0
       end
 
+      def <<(msg)
+        update(msg)
+      end
+
       def finish(rng)
         Botan.call_fn_returning_vec(4096, lambda {|b, bl| LibBotan.botan_pk_op_sign_finish(@ptr, rng.ptr, b, bl)})
       end

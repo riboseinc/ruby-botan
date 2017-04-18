@@ -31,6 +31,10 @@ module Botan
       raise if rc != 0
     end
 
+    def <<(x)
+      update(x)
+    end
+
     def final
       out_buf = FFI::MemoryPointer.new(:uint8, output_length())
       rc = LibBotan.botan_hash_final(@ptr, out_buf)

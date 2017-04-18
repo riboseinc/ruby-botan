@@ -22,6 +22,10 @@ module Botan
         raise if rc != 0
       end
 
+      def <<(msg)
+        update(msg)
+      end
+
       def check_signature(signature)
         sig_buf = FFI::MemoryPointer.new(:uint8, signature.bytesize)
         sig_buf.write_bytes(signature)
