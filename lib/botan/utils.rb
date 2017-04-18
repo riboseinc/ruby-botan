@@ -19,5 +19,13 @@ module Botan
     bytes = call_fn_returning_vec(guess, fn)
     bytes[0..-2].force_encoding('ascii-8bit')
   end
+
+  def self.hex_encode(bytes)
+    bytes.unpack('H*')[0]
+  end
+
+  def self.hex_decode(hexs)
+    [hexs].pack('H*')
+  end
 end # module
 
