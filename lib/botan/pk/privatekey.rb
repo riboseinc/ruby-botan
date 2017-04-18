@@ -33,8 +33,9 @@ module Botan
         PublicKey.new(pubkey_ptr.read_pointer)
       end
 
-      def export
-        call_fn_returning_vec(4096, lambda {|b, bl| LibBotan.botan_privkey_export(@ptr, b, bl)})
+      def export(pem=false)
+        flags = pem ? 1 : 0
+        Botan.call_fn_returning_vec(4096, lambda {|b, bl| LibBotan.botan_privkey_export(@ptr, b, bl, flags)})
       end
     end # class
   end # module
