@@ -1,5 +1,20 @@
+dist: trusty
 sudo: false
 language: ruby
+
 rvm:
   - 2.4.0
-before_install: gem install bundler -v 1.13.7
+
+branches:
+  only:
+    - master
+
+cache:
+  bundler: true
+  directories:
+    - ~/builds/libbotan
+
+before_install:
+  - gem install bundler -v 1.13.7
+  - bash scripts/build-libbotan.sh
+  - export LD_LIBRARY_PATH=~/builds/libbotan
