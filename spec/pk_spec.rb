@@ -25,10 +25,12 @@ describe 'PK' do
 
     it 'can can export the public key' do
       expect(pub.export(pem=true).length).to be >= 1
+      expect(pub.export(pem=false).length).to be >= 1
     end
 
     it 'can export the private key' do
       expect(priv.export(pem=true).length).to be >= 1
+      expect(priv.export(pem=false).length).to be >= 1
     end
 
     it 'can encrypt and decrypt' do
@@ -75,12 +77,14 @@ describe 'PK' do
       expect(pub.algo_name).to eql 'ECDSA'
     end
 
-    it 'can can export the public key' do
+    it 'can export the public key' do
       expect(pub.export(pem=true).length).to be >= 1
+      expect(pub.export(pem=false).length).to be >= 1
     end
 
     it 'can export the private key' do
       expect(priv.export(pem=true).length).to be >= 1
+      expect(priv.export(pem=false).length).to be >= 1
     end
 
     it 'can sign and verify' do
