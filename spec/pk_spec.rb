@@ -24,7 +24,7 @@ describe 'PK' do
     end
 
     it 'can can export the public key' do
-      expect(pub.encoding(pem=true).length).to be >= 1
+      expect(pub.export(pem=true).length).to be >= 1
     end
 
     it 'can export the private key' do
@@ -76,7 +76,7 @@ describe 'PK' do
     end
 
     it 'can can export the public key' do
-      expect(pub.encoding(pem=true).length).to be >= 1
+      expect(pub.export(pem=true).length).to be >= 1
     end
 
     it 'can export the private key' do

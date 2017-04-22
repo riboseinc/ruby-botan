@@ -25,7 +25,7 @@ module Botan
         Botan.call_fn_returning_string(32, lambda {|b, bl| LibBotan.botan_pubkey_algo_name(@ptr, b, bl)})
       end
 
-      def encoding(pem=false)
+      def export(pem=false)
         flag = pem ? 1 : 0
         Botan.call_fn_returning_vec(0, lambda {|b, bl| LibBotan.botan_pubkey_export(@ptr, b, bl, flag)})
       end
