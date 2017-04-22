@@ -81,7 +81,7 @@ module Botan
       Botan::PK::PublicKey.new(pub)
     end
 
-    def subject_dn(key, index)
+    def subject_info(key, index)
       Botan.call_fn_returning_string(0, lambda {|b,bl| LibBotan.botan_x509_cert_get_subject_dn(@ptr, key, index, b, bl)})
     end
   end # class
