@@ -27,7 +27,11 @@ module Botan
 
       def export(pem=false)
         flag = pem ? 1 : 0
-        Botan.call_fn_returning_vec(0, lambda {|b, bl| LibBotan.botan_pubkey_export(@ptr, b, bl, flag)})
+        if pem
+          Botan.call_fn_returning_string(0, lambda {|b, bl| LibBotan.botan_pubkey_export(@ptr, b, bl, flag)})
+        else
+          Botan.call_fn_returning_vec(0, lambda {|b, bl| LibBotan.botan_pubkey_export(@ptr, b, bl, flag)})
+        end
       end
 
       def fingerprint(hash='SHA-256')

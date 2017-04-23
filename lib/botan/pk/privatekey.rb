@@ -35,7 +35,11 @@ module Botan
 
       def export(pem=false)
         flags = pem ? 1 : 0
-        Botan.call_fn_returning_vec(4096, lambda {|b, bl| LibBotan.botan_privkey_export(@ptr, b, bl, flags)})
+        if pem
+          Botan.call_fn_returning_string(4096, lambda {|b, bl| LibBotan.botan_privkey_export(@ptr, b, bl, flags)})
+        else
+          Botan.call_fn_returning_vec(4096, lambda {|b, bl| LibBotan.botan_privkey_export(@ptr, b, bl, flags)})
+        end
       end
     end # class
   end # module
