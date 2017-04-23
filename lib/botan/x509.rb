@@ -2,25 +2,30 @@ require 'date'
 
 module Botan
   class X509Cert
-    def initialize(filename=nil, buf=nil)
-      raise unless filename or buf
-      raise if filename and buf
-      ptr = FFI::MemoryPointer.new(:pointer)
-      if filename
-        rc = LibBotan.botan_x509_cert_load_file(ptr, filename)
-      else
-        buf_mem = FFI::MemoryPointer.new(:uint8, buf.bytesize)
-        buf_mem.write_bytes(buf)
-        rc = LibBotan.botan_x509_cert_load(ptr, buf_mem, buf_mem.size)
-      end
-      raise if rc != 0
-      @ptr = ptr.read_pointer
+    def initialize(ptr)
+      @ptr = ptr
       raise if @ptr.null?
       @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
     end
 
     def self.destroy(ptr)
       LibBotan.botan_x509_cert_destroy(ptr)
+    end
+
+    def self.load_file(filename)
+      ptr = FFI::MemoryPointer.new(:pointer)
+      rc = LibBotan.botan_x509_cert_load_file(ptr, filename)
+      raise if rc != 0
+      X509Cert.new(ptr.read_pointer)
+    end
+
+    def self.load(bytes)
+      ptr = FFI::MemoryPointer.new(:pointer)
+      buf = FFI::MemoryPointer.new(:uint8, bytes.bytesize)
+      buf.write_bytes(bytes)
+      rc = LibBotan.botan_x509_cert_load(ptr, buf, buf.size)
+      raise if rc != 0
+      X509Cert.new(ptr.read_pointer)
     end
 
     def time_starts
