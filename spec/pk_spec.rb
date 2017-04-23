@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe 'PK' do
-  context 'rsa' do
-    let(:priv) { Botan::PK::PrivateKey.new('rsa', 1024, Botan::RNG.new) }
+  context 'rsa generation' do
+    let(:priv) { Botan::PK::PrivateKey.generate('rsa', 1024, Botan::RNG.new) }
     let(:pub) { priv.public_key }
     let(:enc) { Botan::PK::Encrypt.new(pub, 'EME1(SHA-256)') }
     let(:dec) { Botan::PK::Decrypt.new(priv, 'EME1(SHA-256)') }
@@ -57,8 +57,8 @@ describe 'PK' do
     end
   end
 
-  context 'ecdsa' do
-    let(:priv) { Botan::PK::PrivateKey.new('ecdsa', 'secp384r1', Botan::RNG.new) }
+  context 'ecdsa generation' do
+    let(:priv) { Botan::PK::PrivateKey.generate('ecdsa', 'secp384r1', Botan::RNG.new) }
     let(:pub) { priv.public_key }
     let(:sign) { Botan::PK::Sign.new(priv, 'EMSA1(SHA-384)') }
     let(:verify) { Botan::PK::Verify.new(pub, 'EMSA1(SHA-384)') }
@@ -105,13 +105,13 @@ describe 'PK' do
     end
   end
 
-  context 'ecdh' do
+  context 'ecdh generation' do
     let(:a_rng) { Botan::RNG.new('user') }
     let(:b_rng) { Botan::RNG.new('user') }
     let(:dh_kdf) { 'KDF2(SHA-384)' }
     let(:group) { 'secp256r1' }
-    let(:a_dh_priv) { Botan::PK::PrivateKey.new('ecdh', group, Botan::RNG.new) }
-    let(:b_dh_priv) { Botan::PK::PrivateKey.new('ecdh', group, Botan::RNG.new) }
+    let(:a_dh_priv) { Botan::PK::PrivateKey.generate('ecdh', group, Botan::RNG.new) }
+    let(:b_dh_priv) { Botan::PK::PrivateKey.generate('ecdh', group, Botan::RNG.new) }
     let(:a_dh) { Botan::PK::KeyAgreement.new(a_dh_priv, dh_kdf) }
     let(:b_dh) { Botan::PK::KeyAgreement.new(b_dh_priv, dh_kdf) }
     let(:a_dh_pub) { a_dh.public_value }
@@ -126,11 +126,29 @@ describe 'PK' do
     end
   end
 
-  context Botan::PK::PrivateKey do
+  context Botan::PK::PrivateKey.method(:generate) do
     it 'errors on invalid algorithm' do
       expect{
-        Botan::PK::PrivateKey.new('fake', nil, Botan::RNG.new)
+        Botan::PK::PrivateKey.generate('fake', nil, Botan::RNG.new)
       }.to raise_error
+    end
+  end
+
+  context Botan::PK::PrivateKey.method(:load) do
+    let(:private_key_pem) { File.read('spec/data/private_key.pem') }
+    let(:key) { Botan::PK::PrivateKey.load(private_key_pem, Botan::RNG.new, '') }
+
+    it 'exports correctly' do
+      expect(key.export(pem=true)).to eql private_key_pem
+    end
+  end
+
+  context Botan::PK::PublicKey.method(:load) do
+    let(:public_key_pem) { File.read('spec/data/public_key.pem') }
+    let(:key) { Botan::PK::PublicKey.load(public_key_pem) }
+
+    it 'exports correctly' do
+      expect(key.export(pem=true)).to eql public_key_pem
     end
   end
 end

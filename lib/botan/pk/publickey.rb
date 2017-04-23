@@ -2,16 +2,23 @@ module Botan
   module PK
     class PublicKey
       attr_reader :ptr
-      def initialize(obj=nil)
-        @ptr = obj
-        @ptr_auto = nil
-        if @ptr
-          @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
-        end
+      def initialize(ptr)
+        @ptr = ptr
+        raise if @ptr.null?
+        @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
       end
 
       def self.destroy(ptr)
         LibBotan.botan_pubkey_destroy(ptr)
+      end
+
+      def self.load(bytes)
+        ptr = FFI::MemoryPointer.new(:pointer)
+        buf = FFI::MemoryPointer.new(:uint8, bytes.bytesize)
+        buf.write_bytes(bytes)
+        rc = LibBotan.botan_pubkey_load(ptr, buf, buf.size)
+        raise if rc != 0
+        PublicKey.new(ptr.read_pointer)
       end
 
       def estimated_strength
