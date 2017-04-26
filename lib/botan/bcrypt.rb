@@ -13,7 +13,7 @@ module Botan
     result
   end
 
-  def self.check_bcrypt(passwd, bcrypt)
+  def self.bcrypt_valid?(passwd, bcrypt)
     rc = LibBotan.botan_bcrypt_is_valid(passwd, bcrypt)
     return rc == 0
   end
