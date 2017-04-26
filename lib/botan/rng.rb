@@ -15,6 +15,10 @@ module Botan
       LibBotan.botan_rng_destroy(ptr)
     end
 
+    def self.get(length)
+      RNG.new.get(length)
+    end
+
     def reseed(bits=256)
       Botan.call_ffi(:botan_rng_reseed, @ptr, bits)
     end
