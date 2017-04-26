@@ -5,7 +5,9 @@ module Botan
       rng_ptr = FFI::MemoryPointer.new(:pointer)
       Botan.call_ffi(:botan_rng_init, rng_ptr, rng_type)
       @ptr = rng_ptr.read_pointer
-      raise if @ptr.null?
+      if @ptr.null?
+        raise Botan::Error, 'botan_rng_init returned NULL'
+      end
       @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
     end
 

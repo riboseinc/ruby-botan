@@ -5,7 +5,9 @@ module Botan
       mac_ptr = FFI::MemoryPointer.new(:pointer)
       Botan.call_ffi(:botan_mac_init, mac_ptr, algo, flags)
       @ptr = mac_ptr.read_pointer
-      raise if @ptr.null?
+      if @ptr.null?
+        raise Botan::Error, 'botan_mac_init returned NULL'
+      end
       @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
     end
 

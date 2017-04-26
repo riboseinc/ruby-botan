@@ -4,7 +4,9 @@ module Botan
       attr_reader :ptr
       def initialize(ptr)
         @ptr = ptr
-        raise if @ptr.null?
+        if @ptr.null?
+          raise Botan::Error, 'PrivateKey received a NULL pointer'
+        end
         @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
        end
 
@@ -24,10 +26,12 @@ module Botan
         when 'mce', 'mceliece'
           Botan.call_ffi(:botan_privkey_create_mceliece, ptr, rng.ptr, param[0], param[1])
         else
-          raise
+          raise Botan::Error, "Invalid algorithm #{alg}"
         end
         ptr = ptr.read_pointer
-        raise if ptr.null?
+        if ptr.null?
+          raise Botan::Error, "botan_privkey_create_#{alg} failed"
+        end
         PrivateKey.new(ptr)
       end
 

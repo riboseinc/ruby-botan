@@ -6,7 +6,9 @@ module Botan
         flags = 0
         Botan.call_ffi(:botan_pk_op_sign_create, ptr, key.ptr, padding, flags)
         @ptr = ptr.read_pointer
-        raise if @ptr.null?
+        if @ptr.null?
+          raise Botan::Error, 'botan_pk_op_sign_create returned NULL'
+        end
         @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
       end
 

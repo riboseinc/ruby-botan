@@ -1,4 +1,4 @@
 module Botan
-  class Error < StandardError; end
+  class Error < ::StandardError; end
 end # module
 

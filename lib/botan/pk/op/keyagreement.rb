@@ -8,7 +8,9 @@ module Botan
         Botan.call_ffi(:botan_pk_op_key_agreement_create,
                        ptr, key.ptr, kdf, flags)
         @ptr = ptr.read_pointer
-        raise if @ptr.null?
+        if @ptr.null?
+          raise Botan::Error, 'botan_pk_op_key_agreement_create returned NULL'
+        end
         @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
         @public_value = Botan.call_ffi_returning_vec(0, lambda {|b,bl|
           LibBotan.botan_pk_op_key_agreement_export_public(key.ptr, b, bl)

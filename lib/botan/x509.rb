@@ -4,7 +4,9 @@ module Botan
   class X509Cert
     def initialize(ptr)
       @ptr = ptr
-      raise if @ptr.null?
+      if @ptr.null?
+        raise Botan::Error, 'X509Cert received a NULL pointer'
+      end
       @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
     end
 
@@ -36,7 +38,7 @@ module Botan
       when 15
         ::DateTime.strptime(time, '%Y%m%d%H%M%SZ')
       else
-        raise
+        raise Botan::Error, 'X509Cert time_starts invalid format'
       end
     end
 
@@ -50,7 +52,7 @@ module Botan
       when 15
         DateTime.strptime(time, '%Y%m%d%H%M%SZ')
       else
-        raise
+        raise Botan::Error, 'X509Cert time_expires invalid format'
       end
     end
 
@@ -95,7 +97,9 @@ module Botan
       ptr = FFI::MemoryPointer.new(:pointer)
       Botan.call_ffi(:botan_x509_cert_get_public_key, @ptr, ptr)
       pub = ptr.read_pointer
-      raise if pub.null?
+      if pub.null?
+        raise Botan::Error, 'botan_x509_cert_get_public_key returned NULL'
+      end
       Botan::PK::PublicKey.new(pub)
     end
 

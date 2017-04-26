@@ -130,7 +130,7 @@ describe 'PK' do
     it 'errors on invalid algorithm' do
       expect{
         Botan::PK::PrivateKey.generate('fake', nil, Botan::RNG.new)
-      }.to raise_error
+      }.to raise_error(Botan::Error)
     end
   end
 

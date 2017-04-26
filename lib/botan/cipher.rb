@@ -5,7 +5,9 @@ module Botan
       cipher_ptr = FFI::MemoryPointer.new(:pointer)
       Botan.call_ffi(:botan_cipher_init, cipher_ptr, algo, flags)
       @ptr = cipher_ptr.read_pointer
-      raise if @ptr.null?
+      if @ptr.null?
+        raise Botan::Error, 'botan_cipher_init returned NULL'
+      end
       @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
     end
 
@@ -79,7 +81,9 @@ module Botan
       Botan.call_ffi(:botan_cipher_update, @ptr, flags, out_buf, out_buf.size,
                            out_written_ptr, input_buf, input_buf.size,
                            inp_consumed_ptr)
-      raise if inp_consumed_ptr.read(:size_t) != inp.bytesize
+      if inp_consumed_ptr.read(:size_t) != inp.bytesize
+        raise Botan::Error, 'botan_cipher_update did not consume all input'
+      end
       out_buf.read_bytes(out_written_ptr.read(:size_t))
     end
 

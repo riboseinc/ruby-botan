@@ -15,10 +15,10 @@ module Botan
     rc = fn.call(buf, buf_len_ptr)
     buf_len = buf_len_ptr.read(:size_t)
     if rc < 0
-      raise unless buf_len > buf.size
+      raise Botan::Error if buf_len <= buf.size
       return call_ffi_returning_vec(buf_len, fn)
     else
-      raise unless buf_len <= buf.size
+      raise Botan::Error if buf_len > buf.size
       buf.read_bytes(buf_len)
     end
   end
