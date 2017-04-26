@@ -1,4 +1,12 @@
 module Botan
+  def self.call_ffi(fn, *args)
+    rc = LibBotan.method(fn).call(*args)
+    if rc < 0
+      raise Botan::Error, "FFI call to #{fn.to_s} failed"
+    end
+    rc
+  end
+
   def self.call_ffi_returning_vec(guess, fn)
     buf = FFI::MemoryPointer.new(:uint8, guess)
     buf_len_ptr = FFI::MemoryPointer.new(:size_t)
