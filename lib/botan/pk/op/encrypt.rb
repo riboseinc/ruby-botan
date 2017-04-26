@@ -18,7 +18,9 @@ module Botan
       def encrypt(msg, rng)
         msg_buf = FFI::MemoryPointer.new(:uint8, msg.bytesize)
         msg_buf.write_bytes(msg)
-        Botan.call_fn_returning_vec(4096, lambda {|b, bl| LibBotan.botan_pk_op_encrypt(@ptr, rng.ptr, b, bl, msg_buf, msg_buf.size)})
+        Botan.call_ffi_returning_vec(4096, lambda {|b, bl|
+          LibBotan.botan_pk_op_encrypt(@ptr, rng.ptr, b, bl, msg_buf, msg_buf.size)
+        })
       end
     end # class
   end # module

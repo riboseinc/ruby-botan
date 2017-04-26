@@ -29,15 +29,21 @@ module Botan
       end
 
       def algo_name
-        Botan.call_fn_returning_string(32, lambda {|b, bl| LibBotan.botan_pubkey_algo_name(@ptr, b, bl)})
+        Botan.call_ffi_returning_string(32, lambda {|b, bl|
+          LibBotan.botan_pubkey_algo_name(@ptr, b, bl)
+        })
       end
 
       def export(pem=false)
-        flag = pem ? 1 : 0
+        flags = pem ? 1 : 0
         if pem
-          Botan.call_fn_returning_string(0, lambda {|b, bl| LibBotan.botan_pubkey_export(@ptr, b, bl, flag)})
+          Botan.call_ffi_returning_string(0, lambda {|b, bl|
+            LibBotan.botan_pubkey_export(@ptr, b, bl, flags)
+          })
         else
-          Botan.call_fn_returning_vec(0, lambda {|b, bl| LibBotan.botan_pubkey_export(@ptr, b, bl, flag)})
+          Botan.call_ffi_returning_vec(0, lambda {|b, bl|
+            LibBotan.botan_pubkey_export(@ptr, b, bl, flags)
+          })
         end
       end
 
