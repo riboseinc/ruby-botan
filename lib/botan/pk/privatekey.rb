@@ -61,6 +61,27 @@ module Botan
           })
         end
       end
+
+      def valid?(rng=nil, thorough=false)
+        rng ||= Botan::RNG.new
+        flags = thorough ? 1 : 0
+        rc = LibBotan.botan_privkey_check_key(@ptr, rng.ptr, flags)
+        rc == 0
+      end
+
+      def get_field(field)
+        mp = nil
+        mp_ptr = FFI::MemoryPointer.new(:pointer)
+        Botan.call_ffi(:botan_mp_init, mp_ptr)
+        mp = mp_ptr.read_pointer
+        Botan.call_ffi(:botan_privkey_get_field, mp, @ptr, field)
+        hex_str = Botan.call_ffi_returning_string(0, lambda {|b,bl|
+          LibBotan.botan_mp_to_str(mp, 16, b, bl)
+        })
+        hex_str.hex
+      ensure
+        LibBotan.botan_mp_destroy(mp) if mp and not mp.null?
+      end
     end # class
   end # module
 end # module

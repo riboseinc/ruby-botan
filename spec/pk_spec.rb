@@ -11,6 +11,36 @@ describe 'PK' do
     let(:rng) { Botan::RNG.new }
     let(:symkey) { rng.get(32) }
 
+    it 'passes basic checks' do
+      expect(pub.valid?).to eql true
+      expect(pub.valid?(rng)).to eql true
+
+      expect(priv.valid?).to eql true
+      expect(priv.valid?(rng)).to eql true
+    end
+
+    it 'returns valid fields' do
+      expect(pub.get_field('n')).to be >= 1
+      expect(pub.get_field('e')).to eql 65537
+
+      expect(priv.get_field('p')).to be >= 1
+      expect(priv.get_field('q')).to be >= 1
+      expect(priv.get_field('d')).to be >= 1
+      expect(priv.get_field('c')).to be >= 1
+      expect(priv.get_field('d1')).to be >= 1
+      expect(priv.get_field('d2')).to be >= 1
+    end
+
+    it 'raises an error when requesting invalid fields' do
+      expect {
+        pub.get_field('z')
+      }.to raise_error Botan::Error
+
+      expect {
+        priv.get_field('z')
+      }.to raise_error Botan::Error
+    end
+
     it 'has a valid fingerprint length' do
       expect(pub.fingerprint('SHA-256').length).to eql 64
     end
@@ -64,6 +94,38 @@ describe 'PK' do
     let(:verify) { Botan::PK::Verify.new(pub, 'EMSA1(SHA-384)') }
     let(:rng) { Botan::RNG.new }
     let(:symkey) { rng.get(32) }
+
+    it 'passes basic checks' do
+      expect(pub.valid?).to eql true
+      expect(pub.valid?(rng)).to eql true
+
+      expect(priv.valid?).to eql true
+      expect(priv.valid?(rng)).to eql true
+    end
+
+    it 'returns valid fields' do
+      expect(pub.get_field('public_x')).to be >= 1
+      expect(pub.get_field('public_y')).to be >= 1
+      expect(pub.get_field('base_x')).to be >= 1
+      expect(pub.get_field('base_y')).to be >= 1
+      expect(pub.get_field('p')).to be >= 1
+      expect(pub.get_field('a')).to be >= 1
+      expect(pub.get_field('b')).to be >= 1
+      expect(pub.get_field('cofactor')).to be >= 1
+      expect(pub.get_field('order')).to be >= 1
+
+      expect(priv.get_field('x')).to be >= 1
+    end
+
+    it 'raises an error when requesting invalid fields' do
+      expect {
+        pub.get_field('z')
+      }.to raise_error Botan::Error
+
+      expect {
+        priv.get_field('z')
+      }.to raise_error Botan::Error
+    end
 
     it 'has a valid fingerprint length' do
       expect(pub.fingerprint('SHA-256').length).to eql 64
@@ -128,9 +190,9 @@ describe 'PK' do
 
   context Botan::PK::PrivateKey.method(:generate) do
     it 'errors on invalid algorithm' do
-      expect{
+      expect {
         Botan::PK::PrivateKey.generate('fake', nil, Botan::RNG.new)
-      }.to raise_error(Botan::Error)
+      }.to raise_error Botan::Error
     end
   end
 
