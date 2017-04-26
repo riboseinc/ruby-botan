@@ -16,15 +16,13 @@ module Botan
         ptr = FFI::MemoryPointer.new(:pointer)
         buf = FFI::MemoryPointer.new(:uint8, bytes.bytesize)
         buf.write_bytes(bytes)
-        rc = LibBotan.botan_pubkey_load(ptr, buf, buf.size)
-        raise if rc != 0
+        Botan.call_ffi(:botan_pubkey_load, ptr, buf, buf.size)
         PublicKey.new(ptr.read_pointer)
       end
 
       def estimated_strength
         strength_ptr = FFI::MemoryPointer.new(:size_t)
-        rc = LibBotan.botan_pubkey_estimated_strength(@ptr, strength_ptr)
-        raise if rc != 0
+        Botan.call_ffi(:botan_pubkey_estimated_strength, @ptr, strength_ptr)
         strength_ptr.read(:size_t)
       end
 
@@ -52,8 +50,7 @@ module Botan
         buf = FFI::MemoryPointer.new(:uint8, n)
         buf_len_ptr = FFI::MemoryPointer.new(:size_t)
         buf_len_ptr.write(:size_t, n)
-        rc = LibBotan.botan_pubkey_fingerprint(@ptr, hash, buf, buf_len_ptr)
-        raise if rc != 0
+        Botan.call_ffi(:botan_pubkey_fingerprint, @ptr, hash, buf, buf_len_ptr)
         bytes = buf.read_bytes(buf_len_ptr.read(:size_t))
         bytes.unpack('H*')[0]
       end

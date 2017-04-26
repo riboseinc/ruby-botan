@@ -16,17 +16,16 @@ module Botan
         ptr = FFI::MemoryPointer.new(:pointer)
         case alg
         when 'rsa'
-          rc = LibBotan.botan_privkey_create_rsa(ptr, rng.ptr, param)
+          Botan.call_ffi(:botan_privkey_create_rsa, ptr, rng.ptr, param)
         when 'ecdsa'
-          rc = LibBotan.botan_privkey_create_ecdsa(ptr, rng.ptr, param)
+          Botan.call_ffi(:botan_privkey_create_ecdsa, ptr, rng.ptr, param)
         when 'ecdh'
-          rc = LibBotan.botan_privkey_create_ecdh(ptr, rng.ptr, param)
+          Botan.call_ffi(:botan_privkey_create_ecdh, ptr, rng.ptr, param)
         when 'mce', 'mceliece'
-          rc = LibBotan.botan_privkey_create_mceliece(ptr, rng.ptr, param[0], param[1])
+          Botan.call_ffi(:botan_privkey_create_mceliece, ptr, rng.ptr, param[0], param[1])
         else
           raise
         end
-        raise if rc != 0
         ptr = ptr.read_pointer
         raise if ptr.null?
         PrivateKey.new(ptr)
@@ -36,15 +35,13 @@ module Botan
         ptr = FFI::MemoryPointer.new(:pointer)
         buf = FFI::MemoryPointer.new(:uint8, bytes.bytesize)
         buf.write_bytes(bytes)
-        rc = LibBotan.botan_privkey_load(ptr, rng.ptr, buf, buf.size, password)
-        raise if rc != 0
+        Botan.call_ffi(:botan_privkey_load, ptr, rng.ptr, buf, buf.size, password)
         PrivateKey.new(ptr.read_pointer)
       end
 
       def public_key
         pubkey_ptr = FFI::MemoryPointer.new(:pointer)
-        rc = LibBotan.botan_privkey_export_pubkey(pubkey_ptr, @ptr)
-        raise if rc != 0
+        Botan.call_ffi(:botan_privkey_export_pubkey, pubkey_ptr, @ptr)
         PublicKey.new(pubkey_ptr.read_pointer)
       end
 

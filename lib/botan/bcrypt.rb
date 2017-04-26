@@ -5,8 +5,9 @@ module Botan
     flags = 0
     out_len_ptr = FFI::MemoryPointer.new(:size_t)
     out_len_ptr.write(:size_t, out_len)
-    rc = LibBotan.botan_bcrypt_generate(out_buf, out_len_ptr, passwd, rng.ptr, work_factor, flags)
-    raise if rc != 0
+    Botan.call_ffi(:botan_bcrypt_generate,
+                   out_buf, out_len_ptr,
+                   passwd, rng.ptr, work_factor, flags)
     result = out_buf.read_bytes(out_len_ptr.read(:size_t))
     result = result[0..-2] if result[-1] == "\x00"
     result

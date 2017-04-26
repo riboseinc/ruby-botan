@@ -5,8 +5,8 @@ module Botan
       def initialize(key, kdf)
         ptr = FFI::MemoryPointer.new(:pointer)
         flags = 0
-        rc = LibBotan.botan_pk_op_key_agreement_create(ptr, key.ptr, kdf, flags)
-        raise if rc != 0
+        Botan.call_ffi(:botan_pk_op_key_agreement_create,
+                       ptr, key.ptr, kdf, flags)
         @ptr = ptr.read_pointer
         raise if @ptr.null?
         @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))

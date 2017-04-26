@@ -14,8 +14,7 @@ module Botan
 
     def self.load_file(filename)
       ptr = FFI::MemoryPointer.new(:pointer)
-      rc = LibBotan.botan_x509_cert_load_file(ptr, filename)
-      raise if rc != 0
+      Botan.call_ffi(:botan_x509_cert_load_file, ptr, filename)
       X509Cert.new(ptr.read_pointer)
     end
 
@@ -23,8 +22,7 @@ module Botan
       ptr = FFI::MemoryPointer.new(:pointer)
       buf = FFI::MemoryPointer.new(:uint8, bytes.bytesize)
       buf.write_bytes(bytes)
-      rc = LibBotan.botan_x509_cert_load(ptr, buf, buf.size)
-      raise if rc != 0
+      Botan.call_ffi(:botan_x509_cert_load, ptr, buf, buf.size)
       X509Cert.new(ptr.read_pointer)
     end
 
@@ -95,8 +93,7 @@ module Botan
 
     def subject_public_key
       ptr = FFI::MemoryPointer.new(:pointer)
-      rc = LibBotan.botan_x509_cert_get_public_key(@ptr, ptr)
-      raise if rc != 0
+      Botan.call_ffi(:botan_x509_cert_get_public_key, @ptr, ptr)
       pub = ptr.read_pointer
       raise if pub.null?
       Botan::PK::PublicKey.new(pub)
