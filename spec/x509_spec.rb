@@ -96,6 +96,10 @@ Q8WpvOE='
       expect(cert.subject_info('Organizational Unit', 0)).to eql 'bsi'
       expect(cert.subject_info('Country', 0)).to eql 'DE'
     end
-  end
-end
+
+    it 'returns a string representation' do
+      expect(cert.to_s.class).to eql String
+    end
+  end # context
+end # describe
 
