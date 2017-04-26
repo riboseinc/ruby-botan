@@ -1,5 +1,6 @@
-require "botan/version"
+require 'botan/version'
 require 'ffi/libbotan'
+require 'botan/error'
 require 'botan/bcrypt'
 require 'botan/cipher'
 require 'botan/hash'
