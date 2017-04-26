@@ -1,7 +1,7 @@
 module Botan
   class RNG
     attr_reader :ptr
-    def initialize(rng_type='system')
+    def initialize(rng_type=nil)
       rng_ptr = FFI::MemoryPointer.new(:pointer)
       Botan.call_ffi(:botan_rng_init, rng_ptr, rng_type)
       @ptr = rng_ptr.read_pointer
