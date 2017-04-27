@@ -2,17 +2,17 @@ require 'spec_helper'
 
 describe 'hex_encode and hex_decode' do
   let(:hex) { 'aabbccddeeff' }
-  let(:bytes) { "\xAA\xBB\xCC\xDD\xEE\xFF".force_encoding('ascii-8bit') }
+  let(:data) { "\xAA\xBB\xCC\xDD\xEE\xFF".force_encoding(Encoding::BINARY) }
 
   it 'encodes and decodes correctly' do
 
     expect(
-      Botan.hex_encode(bytes)
+      Botan.hex_encode(data)
     ).to eql hex
 
     expect(
       Botan.hex_decode(hex)
-    ).to eql bytes
+    ).to eql data
 
     expect(
       Botan.hex_encode(Botan.hex_decode(hex))

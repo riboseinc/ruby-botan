@@ -27,8 +27,8 @@ module Botan
     end
   end
 
-  def self.hex_encode(bytes)
-    bytes.unpack('H*')[0]
+  def self.hex_encode(data)
+    data.unpack('H*')[0]
   end
 
   def self.hex_decode(hexs)

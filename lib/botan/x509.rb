@@ -20,10 +20,10 @@ module Botan
       X509Cert.new(ptr.read_pointer)
     end
 
-    def self.from_data(bytes)
+    def self.from_data(data)
       ptr = FFI::MemoryPointer.new(:pointer)
-      buf = FFI::MemoryPointer.new(:uint8, bytes.bytesize)
-      buf.write_bytes(bytes)
+      buf = FFI::MemoryPointer.new(:uint8, data.bytesize)
+      buf.write_bytes(data)
       Botan.call_ffi(:botan_x509_cert_load, ptr, buf, buf.size)
       X509Cert.new(ptr.read_pointer)
     end

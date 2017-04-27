@@ -14,10 +14,10 @@ module Botan
         LibBotan.botan_pubkey_destroy(ptr)
       end
 
-      def self.from_data(bytes)
+      def self.from_data(data)
         ptr = FFI::MemoryPointer.new(:pointer)
-        buf = FFI::MemoryPointer.new(:uint8, bytes.bytesize)
-        buf.write_bytes(bytes)
+        buf = FFI::MemoryPointer.new(:uint8, data.bytesize)
+        buf.write_bytes(data)
         Botan.call_ffi(:botan_pubkey_load, ptr, buf, buf.size)
         PublicKey.new(ptr.read_pointer)
       end
@@ -47,8 +47,8 @@ module Botan
         buf_len_ptr = FFI::MemoryPointer.new(:size_t)
         buf_len_ptr.write(:size_t, n)
         Botan.call_ffi(:botan_pubkey_fingerprint, @ptr, hash, buf, buf_len_ptr)
-        bytes = buf.read_bytes(buf_len_ptr.read(:size_t))
-        bytes.unpack('H*')[0]
+        data = buf.read_bytes(buf_len_ptr.read(:size_t))
+        Botan.hex_encode(data)
       end
 
       def valid?(rng=nil, thorough=false)
