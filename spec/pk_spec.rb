@@ -196,18 +196,18 @@ describe 'PK' do
     end
   end
 
-  context Botan::PK::PrivateKey.method(:load) do
+  context Botan::PK::PrivateKey.method(:from_data) do
     let(:private_key_pem) { File.read('spec/data/private_key.pem') }
-    let(:key) { Botan::PK::PrivateKey.load(private_key_pem, Botan::RNG.new, '') }
+    let(:key) { Botan::PK::PrivateKey.from_data(private_key_pem, password: '') }
 
     it 'exports correctly' do
       expect(key.export(pem=true)).to eql private_key_pem
     end
   end
 
-  context Botan::PK::PublicKey.method(:load) do
+  context Botan::PK::PublicKey.method(:from_data) do
     let(:public_key_pem) { File.read('spec/data/public_key.pem') }
-    let(:key) { Botan::PK::PublicKey.load(public_key_pem) }
+    let(:key) { Botan::PK::PublicKey.from_data(public_key_pem) }
 
     it 'exports correctly' do
       expect(key.export(pem=true)).to eql public_key_pem

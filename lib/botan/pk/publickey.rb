@@ -14,7 +14,7 @@ module Botan
         LibBotan.botan_pubkey_destroy(ptr)
       end
 
-      def self.load(bytes)
+      def self.from_data(bytes)
         ptr = FFI::MemoryPointer.new(:pointer)
         buf = FFI::MemoryPointer.new(:uint8, bytes.bytesize)
         buf.write_bytes(bytes)
