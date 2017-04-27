@@ -4,8 +4,8 @@ describe Botan::Cipher do
   context 'AES-128/CTR-BE' do
     let(:enc) { Botan::Cipher.encryption('AES-128/CTR-BE') }
     let(:dec) { Botan::Cipher.decryption('AES-128/CTR-BE') }
-    let(:kmin) { enc.key_length[0] }
-    let(:kmax) { enc.key_length[1] }
+    let(:kmin) { enc.key_length_min }
+    let(:kmax) { enc.key_length_max }
     let(:iv) { Botan::RNG.new.get(enc.default_nonce_length) }
     let(:key) { Botan::RNG.new.get(kmax) }
     let(:plaintext) { Botan::RNG.new.get(21) }

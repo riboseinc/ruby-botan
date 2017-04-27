@@ -35,11 +35,12 @@ module Botan
       gran_ptr.read(:size_t)
     end
 
-    def key_length
-      kmin_ptr = FFI::MemoryPointer.new(:size_t)
-      kmax_ptr = FFI::MemoryPointer.new(:size_t)
-      Botan.call_ffi(:botan_cipher_query_keylen, @ptr, kmin_ptr, kmax_ptr)
-      return [kmin_ptr.read(:size_t), kmax_ptr.read(:size_t)]
+    def key_length_min
+      key_lengths[0]
+    end
+
+    def key_length_max
+      key_lengths[1]
     end
 
     def tag_length
@@ -78,8 +79,25 @@ module Botan
       Botan.call_ffi(:botan_cipher_start, @ptr, nonce_buf, nonce_buf.size)
     end
 
-    def _update(txt, final)
-      inp = txt ? txt : ''
+    def update(data)
+      _update(data, final: false)
+    end
+
+    def finish(data=nil)
+      _update(data, final: true)
+    end
+
+    private
+
+    def key_lengths
+      kmin_ptr = FFI::MemoryPointer.new(:size_t)
+      kmax_ptr = FFI::MemoryPointer.new(:size_t)
+      Botan.call_ffi(:botan_cipher_query_keylen, @ptr, kmin_ptr, kmax_ptr)
+      return [kmin_ptr.read(:size_t), kmax_ptr.read(:size_t)]
+    end
+
+    def _update(data, final:)
+      inp = data ? data : ''
       flags = final ? 1 : 0
       out_buf = FFI::MemoryPointer.new(:uint8, inp.bytesize + (final ? tag_length() : 0))
       out_written_ptr = FFI::MemoryPointer.new(:size_t)
@@ -93,14 +111,6 @@ module Botan
         raise Botan::Error, 'botan_cipher_update did not consume all input'
       end
       out_buf.read_bytes(out_written_ptr.read(:size_t))
-    end
-
-    def update(txt)
-      _update(txt, false)
-    end
-
-    def finish(txt=nil)
-      _update(txt, true)
     end
   end # class
 end # module
