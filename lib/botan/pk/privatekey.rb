@@ -82,6 +82,17 @@ module Botan
       ensure
         LibBotan.botan_mp_destroy(mp) if mp and not mp.null?
       end
+
+      def decrypt(data, padding: nil)
+        dec = Botan::PK::Decrypt.new(private_key: self, padding: padding)
+        dec.decrypt(data)
+      end
+
+      def sign(data, padding: nil, rng: Botan::RNG.new)
+        sign = Botan::PK::Sign.new(private_key: self, padding: padding)
+        sign << data
+        sign.finish(rng)
+      end
     end # class
   end # module
 end # module

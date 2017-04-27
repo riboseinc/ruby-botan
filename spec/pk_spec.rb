@@ -69,6 +69,12 @@ describe 'PK' do
       expect(decrypted).to eql symkey
     end
 
+    it 'can encrypt and decrypt (shortcut)' do
+      ctext = pub.encrypt(symkey, rng: rng)
+      decrypted = priv.decrypt(ctext)
+      expect(decrypted).to eql symkey
+    end
+
     it 'can sign and verify' do
       sign << 'mess'
       sign << 'age'
@@ -84,6 +90,12 @@ describe 'PK' do
 
       verify << 'message'
       expect(verify.check_signature(signature)).to eql true
+    end
+
+    it 'can sign and verify (shortcut)' do
+      signature = priv.sign('message', rng: rng)
+      expect(pub.verify(data: 'message', signature: signature)).to eql true
+      expect(pub.verify(data: 'mess', signature: signature)).to eql false
     end
   end
 
@@ -164,6 +176,12 @@ describe 'PK' do
 
       verify << 'message'
       expect(verify.check_signature(signature)).to eql true
+    end
+
+    it 'can sign and verify (shortcut)' do
+      signature = priv.sign('message', rng: rng)
+      expect(pub.verify(data: 'message', signature: signature)).to eql true
+      expect(pub.verify(data: 'mess', signature: signature)).to eql false
     end
   end
 

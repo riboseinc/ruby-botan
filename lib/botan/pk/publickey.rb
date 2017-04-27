@@ -77,6 +77,17 @@ module Botan
       ensure
         LibBotan.botan_mp_destroy(mp) if mp and not mp.null?
       end
+
+      def encrypt(data, padding: nil, rng: Botan::RNG.new)
+        enc = Botan::PK::Encrypt.new(public_key: self, padding: padding)
+        enc.encrypt(data, rng: rng)
+      end
+
+      def verify(data:, signature:, padding: nil)
+        verify = Botan::PK::Verify.new(public_key: self, padding: padding)
+        verify << data
+        verify.check_signature(signature)
+      end
     end # class
   end # module
 end # module
