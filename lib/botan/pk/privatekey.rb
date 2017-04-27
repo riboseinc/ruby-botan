@@ -35,7 +35,7 @@ module Botan
         PrivateKey.new(ptr)
       end
 
-      def self.from_data(data, password:, rng: Botan::RNG.new)
+      def self.from_data(data, password: nil, rng: Botan::RNG.new)
         ptr = FFI::MemoryPointer.new(:pointer)
         buf = FFI::MemoryPointer.new(:uint8, data.bytesize)
         buf.write_bytes(data)
