@@ -1,11 +1,11 @@
 module Botan
   module PK
     class Verify
-      def initialize(key, padding)
+      def initialize(public_key:, padding:)
         ptr = FFI::MemoryPointer.new(:pointer)
         flags = 0
         Botan.call_ffi(:botan_pk_op_verify_create,
-                       ptr, key.ptr, padding, flags)
+                       ptr, public_key.ptr, padding, flags)
         @ptr = ptr.read_pointer
         if @ptr.null?
           raise Botan::Error, 'botan_pk_op_verify_create returned NULL'

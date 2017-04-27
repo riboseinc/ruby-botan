@@ -2,7 +2,7 @@ module Botan
   module PK
     class KeyAgreement
       attr_reader :public_value
-      def initialize(key, kdf)
+      def initialize(key:, kdf: 'KDF2(SHA-256)')
         ptr = FFI::MemoryPointer.new(:pointer)
         flags = 0
         Botan.call_ffi(:botan_pk_op_key_agreement_create,
@@ -21,9 +21,9 @@ module Botan
         LibBotan.botan_pk_op_key_agreement_destroy(ptr)
       end
 
-      def agree(other, key_len, salt)
-        other_buf = FFI::MemoryPointer.new(:uint8, other.bytesize)
-        other_buf.write_bytes(other)
+      def agree(other_key:, key_len:, salt:)
+        other_buf = FFI::MemoryPointer.new(:uint8, other_key.bytesize)
+        other_buf.write_bytes(other_key)
         salt_buf = FFI::MemoryPointer.new(:uint8, salt.bytesize)
         salt_buf.write_bytes(salt)
         Botan.call_ffi_returning_vec(key_len, lambda {|b,bl|

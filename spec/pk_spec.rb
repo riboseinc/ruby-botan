@@ -4,10 +4,10 @@ describe 'PK' do
   context 'rsa generation' do
     let(:priv) { Botan::PK::PrivateKey.generate('rsa', 1024, Botan::RNG.new) }
     let(:pub) { priv.public_key }
-    let(:enc) { Botan::PK::Encrypt.new(pub, 'EME1(SHA-256)') }
-    let(:dec) { Botan::PK::Decrypt.new(priv, 'EME1(SHA-256)') }
-    let(:sign) { Botan::PK::Sign.new(priv, 'EMSA4(SHA-384)') }
-    let(:verify) { Botan::PK::Verify.new(pub, 'EMSA4(SHA-384)') }
+    let(:enc) { Botan::PK::Encrypt.new(public_key: pub, padding: 'EME1(SHA-256)') }
+    let(:dec) { Botan::PK::Decrypt.new(private_key: priv, padding: 'EME1(SHA-256)') }
+    let(:sign) { Botan::PK::Sign.new(private_key: priv, padding: 'EMSA4(SHA-384)') }
+    let(:verify) { Botan::PK::Verify.new(public_key: pub, padding: 'EMSA4(SHA-384)') }
     let(:rng) { Botan::RNG.new }
     let(:symkey) { rng.get(32) }
 
@@ -64,7 +64,7 @@ describe 'PK' do
     end
 
     it 'can encrypt and decrypt' do
-      ctext = enc.encrypt(symkey, rng)
+      ctext = enc.encrypt(symkey, rng: rng)
       decrypted = dec.decrypt(ctext)
       expect(decrypted).to eql symkey
     end
@@ -90,8 +90,8 @@ describe 'PK' do
   context 'ecdsa generation' do
     let(:priv) { Botan::PK::PrivateKey.generate('ecdsa', 'secp384r1', Botan::RNG.new) }
     let(:pub) { priv.public_key }
-    let(:sign) { Botan::PK::Sign.new(priv, 'EMSA1(SHA-384)') }
-    let(:verify) { Botan::PK::Verify.new(pub, 'EMSA1(SHA-384)') }
+    let(:sign) { Botan::PK::Sign.new(private_key: priv, padding: 'EMSA1(SHA-384)') }
+    let(:verify) { Botan::PK::Verify.new(public_key: pub, padding: 'EMSA1(SHA-384)') }
     let(:rng) { Botan::RNG.new }
     let(:symkey) { rng.get(32) }
 
@@ -174,16 +174,20 @@ describe 'PK' do
     let(:group) { 'secp256r1' }
     let(:a_dh_priv) { Botan::PK::PrivateKey.generate('ecdh', group, Botan::RNG.new) }
     let(:b_dh_priv) { Botan::PK::PrivateKey.generate('ecdh', group, Botan::RNG.new) }
-    let(:a_dh) { Botan::PK::KeyAgreement.new(a_dh_priv, dh_kdf) }
-    let(:b_dh) { Botan::PK::KeyAgreement.new(b_dh_priv, dh_kdf) }
+    let(:a_dh) { Botan::PK::KeyAgreement.new(key: a_dh_priv, kdf: dh_kdf) }
+    let(:b_dh) { Botan::PK::KeyAgreement.new(key: b_dh_priv, kdf: dh_kdf) }
     let(:a_dh_pub) { a_dh.public_value }
     let(:b_dh_pub) { b_dh.public_value }
     let(:a_salt) { a_rng.get(8) }
     let(:b_salt) { b_rng.get(8) }
 
     it 'key agreement' do
-      a_key = a_dh.agree(b_dh_pub, 32, a_salt + b_salt)
-      b_key = b_dh.agree(a_dh_pub, 32, a_salt + b_salt)
+      a_key = a_dh.agree(other_key: b_dh_pub,
+                         key_len: 32,
+                         salt: a_salt + b_salt)
+      b_key = b_dh.agree(other_key: a_dh_pub,
+                         key_len: 32,
+                         salt: a_salt + b_salt)
       expect(a_key).to eql b_key
     end
   end

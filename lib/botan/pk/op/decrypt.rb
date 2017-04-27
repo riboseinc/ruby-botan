@@ -1,10 +1,11 @@
 module Botan
   module PK
     class Decrypt
-      def initialize(key, padding)
+      def initialize(private_key:, padding:)
         ptr = FFI::MemoryPointer.new(:pointer)
         flags = 0
-        Botan.call_ffi(:botan_pk_op_decrypt_create, ptr, key.ptr, padding, flags)
+        Botan.call_ffi(:botan_pk_op_decrypt_create,
+                       ptr, private_key.ptr, padding, flags)
         @ptr = ptr.read_pointer
         if @ptr.null?
           raise Botan::Error, 'botan_pk_op_decrypt_create returned NULL'

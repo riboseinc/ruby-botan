@@ -1,10 +1,11 @@
 module Botan
   module PK
     class Encrypt
-      def initialize(key, padding)
+      def initialize(public_key:, padding:)
         ptr = FFI::MemoryPointer.new(:pointer)
         flags = 0
-        Botan.call_ffi(:botan_pk_op_encrypt_create, ptr, key.ptr, padding, flags)
+        Botan.call_ffi(:botan_pk_op_encrypt_create,
+                       ptr, public_key.ptr, padding, flags)
         @ptr = ptr.read_pointer
         if @ptr.null?
           raise Botan::Error, 'botan_pk_op_encrypt_create returned NULL'
@@ -16,7 +17,7 @@ module Botan
         LibBotan.botan_pk_op_encrypt_destroy(ptr)
       end
 
-      def encrypt(msg, rng)
+      def encrypt(msg, rng: Botan::RNG.new)
         msg_buf = FFI::MemoryPointer.new(:uint8, msg.bytesize)
         msg_buf.write_bytes(msg)
         Botan.call_ffi_returning_vec(4096, lambda {|b, bl|
