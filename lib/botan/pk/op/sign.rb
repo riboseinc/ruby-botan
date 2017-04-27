@@ -28,7 +28,7 @@ module Botan
       end
 
       def finish(rng)
-        Botan.call_ffi_returning_vec(4096, lambda {|b, bl|
+        Botan.call_ffi_with_buffer(lambda {|b, bl|
           LibBotan.botan_pk_op_sign_finish(@ptr, rng.ptr, b, bl)
         })
       end

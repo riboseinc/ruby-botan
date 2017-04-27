@@ -29,9 +29,9 @@ module Botan
     end
 
     def time_starts
-      time = Botan.call_ffi_returning_string(16, lambda {|b,bl|
+      time = Botan.call_ffi_with_buffer(lambda {|b,bl|
         LibBotan.botan_x509_cert_get_time_starts(@ptr, b, bl)
-      })
+      }, guess: 16, string: true)
       case time.size
       when 13
         ::DateTime.strptime(time, '%y%m%d%H%M%SZ')
@@ -43,9 +43,9 @@ module Botan
     end
 
     def time_expires
-      time = Botan.call_ffi_returning_string(16, lambda {|b,bl|
+      time = Botan.call_ffi_with_buffer(lambda {|b,bl|
         LibBotan.botan_x509_cert_get_time_expires(@ptr, b, bl)
-      })
+      }, guess: 16, string: true)
       case time.size
       when 13
         DateTime.strptime(time, '%y%m%d%H%M%SZ')
@@ -57,38 +57,38 @@ module Botan
     end
 
     def to_s
-      Botan.call_ffi_returning_string(0, lambda {|b,bl|
+      Botan.call_ffi_with_buffer(lambda {|b,bl|
         LibBotan.botan_x509_cert_to_string(@ptr, b, bl)
-      })
+      }, string: true)
     end
 
     def fingerprint(hash_algo='SHA-256')
       n = Botan::Hash.new(hash_algo).output_length * 3
-      Botan.call_ffi_returning_string(n, lambda {|b,bl|
+      Botan.call_ffi_with_buffer(lambda {|b,bl|
         LibBotan.botan_x509_cert_get_fingerprint(@ptr, hash_algo, b, bl)
-      })
+      }, guess: n, string: true)
     end
 
     def serial_number
-      Botan.call_ffi_returning_vec(0, lambda {|b,bl|
+      Botan.call_ffi_with_buffer(lambda {|b,bl|
         LibBotan.botan_x509_cert_get_serial_number(@ptr, b, bl)
       })
     end
 
     def authority_key_id
-      Botan.call_ffi_returning_vec(0, lambda {|b,bl|
+      Botan.call_ffi_with_buffer(lambda {|b,bl|
         LibBotan.botan_x509_cert_get_authority_key_id(@ptr, b, bl)
       })
     end
 
     def subject_key_id
-      Botan.call_ffi_returning_vec(0, lambda {|b,bl|
+      Botan.call_ffi_with_buffer(lambda {|b,bl|
         LibBotan.botan_x509_cert_get_subject_key_id(@ptr, b, bl)
       })
     end
 
     def subject_public_key_bits
-      Botan.call_ffi_returning_vec(0, lambda {|b,bl|
+      Botan.call_ffi_with_buffer(lambda {|b,bl|
         LibBotan.botan_x509_cert_get_public_key_bits(@ptr, b, bl)
       })
     end
@@ -104,9 +104,9 @@ module Botan
     end
 
     def subject_info(key, index)
-      Botan.call_ffi_returning_string(0, lambda {|b,bl|
+      Botan.call_ffi_with_buffer(lambda {|b,bl|
         LibBotan.botan_x509_cert_get_subject_dn(@ptr, key, index, b, bl)
-      })
+      }, string: true)
     end
   end # class
 end # module

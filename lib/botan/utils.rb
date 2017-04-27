@@ -7,25 +7,24 @@ module Botan
     rc
   end
 
-  def self.call_ffi_returning_vec(guess, fn)
+  def self.call_ffi_with_buffer(fn, guess: 4096, string: false)
     buf = FFI::MemoryPointer.new(:uint8, guess)
     buf_len_ptr = FFI::MemoryPointer.new(:size_t)
     buf_len_ptr.write(:size_t, buf.size)
 
     rc = fn.call(buf, buf_len_ptr)
     buf_len = buf_len_ptr.read(:size_t)
-    if rc < 0
-      raise Botan::Error if buf_len <= buf.size
-      return call_ffi_returning_vec(buf_len, fn)
-    else
-      raise Botan::Error if buf_len > buf.size
-      buf.read_bytes(buf_len)
+    # Call should only fail if buffer was inadequate, and should
+    # only succeed if buffer was adequate.
+    if (rc < 0 && buf_len <= buf.size) || (rc >=0 && buf_len > buf.size)
+      raise Botan::Error, 'FFI call unexpectedly failed'
     end
-  end
 
-  def self.call_ffi_returning_string(guess, fn)
-    bytes = call_ffi_returning_vec(guess, fn)
-    bytes[0..-2].force_encoding('ascii-8bit')
+    if rc < 0
+      return call_ffi_with_buffer(fn, guess: buf_len, string: string)
+    else
+      string ? buf.read_string : buf.read_bytes(buf_len)
+    end
   end
 
   def self.hex_encode(bytes)

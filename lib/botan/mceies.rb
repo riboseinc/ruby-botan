@@ -6,7 +6,7 @@ module Botan
     pt_buf.write_bytes(plaintext)
     ad_buf = FFI::MemoryPointer.new(:uint8, ad.bytesize)
     ad_buf.write_bytes(ad)
-    call_ffi_returning_vec(0, lambda {|b,bl|
+    call_ffi_with_buffer(lambda {|b,bl|
       LibBotan.botan_mceies_encrypt(public_key.ptr,
                                     rng.ptr,
                                     aead,
@@ -24,7 +24,7 @@ module Botan
     ct_buf.write_bytes(ciphertext)
     ad_buf = FFI::MemoryPointer.new(:uint8, ad.bytesize)
     ad_buf.write_bytes(ad)
-    call_ffi_returning_vec(0, lambda {|b,bl|
+    call_ffi_with_buffer(lambda {|b,bl|
       LibBotan.botan_mceies_decrypt(private_key.ptr,
                                     aead,
                                     ct_buf,

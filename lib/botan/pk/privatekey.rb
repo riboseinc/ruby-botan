@@ -51,15 +51,9 @@ module Botan
 
       def export(pem=false)
         flags = pem ? 1 : 0
-        if pem
-          Botan.call_ffi_returning_string(4096, lambda {|b, bl|
-            LibBotan.botan_privkey_export(@ptr, b, bl, flags)
-          })
-        else
-          Botan.call_ffi_returning_vec(4096, lambda {|b, bl|
-            LibBotan.botan_privkey_export(@ptr, b, bl, flags)
-          })
-        end
+        Botan.call_ffi_with_buffer(lambda {|b, bl|
+          LibBotan.botan_privkey_export(@ptr, b, bl, flags)
+        }, string: pem)
       end
 
       def valid?(rng=nil, thorough=false)
@@ -75,9 +69,9 @@ module Botan
         Botan.call_ffi(:botan_mp_init, mp_ptr)
         mp = mp_ptr.read_pointer
         Botan.call_ffi(:botan_privkey_get_field, mp, @ptr, field)
-        hex_str = Botan.call_ffi_returning_string(0, lambda {|b,bl|
+        hex_str = Botan.call_ffi_with_buffer(lambda {|b,bl|
           LibBotan.botan_mp_to_str(mp, 16, b, bl)
-        })
+        }, string: true)
         hex_str.hex
       ensure
         LibBotan.botan_mp_destroy(mp) if mp and not mp.null?

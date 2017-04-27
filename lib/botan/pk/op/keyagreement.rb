@@ -12,7 +12,7 @@ module Botan
           raise Botan::Error, 'botan_pk_op_key_agreement_create returned NULL'
         end
         @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
-        @public_value = Botan.call_ffi_returning_vec(0, lambda {|b,bl|
+        @public_value = Botan.call_ffi_with_buffer(lambda {|b,bl|
           LibBotan.botan_pk_op_key_agreement_export_public(key.ptr, b, bl)
         })
       end
@@ -26,11 +26,11 @@ module Botan
         other_buf.write_bytes(other_key)
         salt_buf = FFI::MemoryPointer.new(:uint8, salt.bytesize)
         salt_buf.write_bytes(salt)
-        Botan.call_ffi_returning_vec(key_len, lambda {|b,bl|
+        Botan.call_ffi_with_buffer(lambda {|b,bl|
           LibBotan.botan_pk_op_key_agreement(@ptr, b, bl,
                                              other_buf, other_buf.size,
                                              salt_buf, salt_buf.size)
-        })
+        }, guess: key_len)
       end
     end # class
   end # module
