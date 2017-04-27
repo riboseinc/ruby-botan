@@ -1,7 +1,8 @@
 module Botan
   module PK
     class Verify
-      def initialize(public_key:, padding:)
+      def initialize(public_key:, padding: nil)
+        padding ||= Botan::DEFAULT_EMSA[public_key.algo_name]
         ptr = FFI::MemoryPointer.new(:pointer)
         flags = 0
         Botan.call_ffi(:botan_pk_op_verify_create,

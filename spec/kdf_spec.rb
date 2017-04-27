@@ -49,7 +49,7 @@ describe Botan.method(:pbkdf_timed) do
   let(:key) { result[:key] }
 
   it 'returns a salt of the expected size' do
-    expect(salt.bytesize).to eql 12
+    expect(salt.bytesize).to eql Botan::DEFAULT_KDF_SALT_LENGTH
   end
 
   it 'uses a valid number of iterations' do

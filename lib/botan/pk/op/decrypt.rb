@@ -1,7 +1,8 @@
 module Botan
   module PK
     class Decrypt
-      def initialize(private_key:, padding:)
+      def initialize(private_key:, padding: nil)
+        padding ||= Botan::DEFAULT_EME
         ptr = FFI::MemoryPointer.new(:pointer)
         flags = 0
         Botan.call_ffi(:botan_pk_op_decrypt_create,

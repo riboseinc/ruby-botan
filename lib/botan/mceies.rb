@@ -1,7 +1,7 @@
 require 'botan/utils'
 
 module Botan
-  def self.mceies_encrypt(public_key:, plaintext:, ad:, aead: 'AES-256/OCB', rng: Botan::RNG.new)
+  def self.mceies_encrypt(public_key:, plaintext:, ad:, aead: DEFAULT_AEAD, rng: Botan::RNG.new)
     pt_buf = FFI::MemoryPointer.new(:uint8, plaintext.bytesize)
     pt_buf.write_bytes(plaintext)
     ad_buf = FFI::MemoryPointer.new(:uint8, ad.bytesize)
@@ -19,7 +19,7 @@ module Botan
     })
   end
 
-  def self.mceies_decrypt(private_key:, ciphertext:, ad:, aead: 'AES-256/OCB')
+  def self.mceies_decrypt(private_key:, ciphertext:, ad:, aead: DEFAULT_AEAD)
     ct_buf = FFI::MemoryPointer.new(:uint8, ciphertext.bytesize)
     ct_buf.write_bytes(ciphertext)
     ad_buf = FFI::MemoryPointer.new(:uint8, ad.bytesize)

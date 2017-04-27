@@ -2,7 +2,7 @@ module Botan
   module PK
     class KeyAgreement
       attr_reader :public_value
-      def initialize(key:, kdf: 'KDF2(SHA-256)')
+      def initialize(key:, kdf: Botan::DEFAULT_KDF_ALGO)
         ptr = FFI::MemoryPointer.new(:pointer)
         flags = 0
         Botan.call_ffi(:botan_pk_op_key_agreement_create,
