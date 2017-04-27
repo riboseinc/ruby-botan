@@ -1,13 +1,13 @@
 require 'botan/utils'
 
 module Botan
-  def self.mceies_encrypt(mce, rng, aead, pt, ad)
-    pt_buf = FFI::MemoryPointer.new(:uint8, pt.bytesize)
-    pt_buf.write_bytes(pt)
+  def self.mceies_encrypt(public_key:, plaintext:, ad:, aead: 'AES-256/OCB', rng: Botan::RNG.new)
+    pt_buf = FFI::MemoryPointer.new(:uint8, plaintext.bytesize)
+    pt_buf.write_bytes(plaintext)
     ad_buf = FFI::MemoryPointer.new(:uint8, ad.bytesize)
     ad_buf.write_bytes(ad)
     call_ffi_returning_vec(0, lambda {|b,bl|
-      LibBotan.botan_mceies_encrypt(mce.ptr,
+      LibBotan.botan_mceies_encrypt(public_key.ptr,
                                     rng.ptr,
                                     aead,
                                     pt_buf,
@@ -19,16 +19,16 @@ module Botan
     })
   end
 
-  def self.mceies_decrypt(mce, aead, ct, ad)
-    ct_buf = FFI::MemoryPointer.new(:uint8, ct.bytesize)
-    ct_buf.write_bytes(ct)
+  def self.mceies_decrypt(private_key:, ciphertext:, ad:, aead: 'AES-256/OCB')
+    ct_buf = FFI::MemoryPointer.new(:uint8, ciphertext.bytesize)
+    ct_buf.write_bytes(ciphertext)
     ad_buf = FFI::MemoryPointer.new(:uint8, ad.bytesize)
     ad_buf.write_bytes(ad)
     call_ffi_returning_vec(0, lambda {|b,bl|
-      LibBotan.botan_mceies_decrypt(mce.ptr,
+      LibBotan.botan_mceies_decrypt(private_key.ptr,
                                     aead,
                                     ct_buf,
-                                    ct.size,
+                                    ct_buf.size,
                                     ad_buf,
                                     ad.size,
                                     b,
