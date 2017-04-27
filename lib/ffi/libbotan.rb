@@ -335,7 +335,7 @@ module LibBotan
                   [:pointer, :pointer, :pointer, :pointer, :string, :uint32, :pointer, :string, :string, :uint32],
                   :int
   attach_function :botan_privkey_export_encrypted_pbkdf_iter,
-                  [:pointer, :pointer, :pointer, :pointer, :string, :size_t, :pointer, :string, :string, :uint32],
+                  [:pointer, :pointer, :pointer, :pointer, :string, :size_t, :string, :string, :uint32],
                   :int
   attach_function :botan_pubkey_load,
                   [:pointer, :pointer, :size_t],
