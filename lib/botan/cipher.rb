@@ -1,6 +1,6 @@
 module Botan
   class Cipher
-    def initialize(algo, encrypt=true)
+    def initialize(algo, encrypt:)
       flags = encrypt ? 0 : 1
       cipher_ptr = FFI::MemoryPointer.new(:pointer)
       Botan.call_ffi(:botan_cipher_init, cipher_ptr, algo, flags)
@@ -13,6 +13,14 @@ module Botan
 
     def self.destroy(ptr)
       LibBotan.botan_cipher_destroy(ptr)
+    end
+
+    def self.encryption(algo)
+      Cipher.new(algo, encrypt: true)
+    end
+
+    def self.decryption(algo)
+      Cipher.new(algo, encrypt: false)
     end
 
     def default_nonce_length

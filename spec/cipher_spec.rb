@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe Botan::Cipher do
   context 'AES-128/CTR-BE' do
-    let(:enc) { Botan::Cipher.new('AES-128/CTR-BE', encrypt=true) }
-    let(:dec) { Botan::Cipher.new('AES-128/CTR-BE', encrypt=false) }
+    let(:enc) { Botan::Cipher.encryption('AES-128/CTR-BE') }
+    let(:dec) { Botan::Cipher.decryption('AES-128/CTR-BE') }
     let(:kmin) { enc.key_length[0] }
     let(:kmax) { enc.key_length[1] }
     let(:iv) { Botan::RNG.new.get(enc.default_nonce_length) }
