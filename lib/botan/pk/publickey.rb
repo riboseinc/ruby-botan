@@ -34,11 +34,16 @@ module Botan
         }, guess: 32, string: true)
       end
 
-      def export(pem=false)
-        flags = pem ? 1 : 0
-        Botan.call_ffi_with_buffer(lambda {|b, bl|
-          LibBotan.botan_pubkey_export(@ptr, b, bl, flags)
-        }, string: pem)
+      def export_pem
+        export(pem: true)
+      end
+
+      def export_der
+        export(pem: false)
+      end
+
+      def to_s
+        export_pem
       end
 
       def fingerprint(hash='SHA-256')
@@ -81,6 +86,15 @@ module Botan
         verify = Botan::PK::Verify.new(public_key: self, padding: padding)
         verify << data
         verify.check_signature(signature)
+      end
+
+      private
+
+      def export(pem:)
+        flags = pem ? 1 : 0
+        Botan.call_ffi_with_buffer(lambda {|b, bl|
+          LibBotan.botan_pubkey_export(@ptr, b, bl, flags)
+        }, string: pem)
       end
     end # class
   end # module

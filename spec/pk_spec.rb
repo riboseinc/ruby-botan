@@ -54,13 +54,24 @@ describe 'PK' do
     end
 
     it 'can export the public key' do
-      expect(pub.export(pem=true).length).to be >= 1
-      expect(pub.export(pem=false).length).to be >= 1
+      expect(pub.export_pem.length).to be >= 1
+      expect(pub.export_der.length).to be >= 1
+      expect(pub.to_s.length).to be >= 1
     end
 
     it 'can export the private key' do
-      expect(priv.export(pem=true).length).to be >= 1
-      expect(priv.export(pem=false).length).to be >= 1
+      expect(priv.export_pem.length).to be >= 1
+      expect(priv.export_der.length).to be >= 1
+    end
+
+    it 'can export the private key (encrypted)' do
+      exported_pem = priv.export_encrypted_pem(password: 'test')
+      expect(exported_pem.length).to be >= 1
+
+      export = priv.export_encrypted_timed(password: 'test',
+                                           ms_to_run: 5)
+      expect(export[:data].length).to be >= 1
+      expect(export[:iterations]).to be >= 1
     end
 
     it 'can encrypt and decrypt' do
@@ -152,13 +163,13 @@ describe 'PK' do
     end
 
     it 'can export the public key' do
-      expect(pub.export(pem=true).length).to be >= 1
-      expect(pub.export(pem=false).length).to be >= 1
+      expect(pub.export_pem.length).to be >= 1
+      expect(pub.export_der.length).to be >= 1
     end
 
     it 'can export the private key' do
-      expect(priv.export(pem=true).length).to be >= 1
-      expect(priv.export(pem=false).length).to be >= 1
+      expect(priv.export_pem.length).to be >= 1
+      expect(priv.export_der.length).to be >= 1
     end
 
     it 'can sign and verify' do
@@ -223,7 +234,7 @@ describe 'PK' do
     let(:key) { Botan::PK::PrivateKey.from_data(private_key_pem, password: '') }
 
     it 'exports correctly' do
-      expect(key.export(pem=true)).to eql private_key_pem
+      expect(key.export_pem).to eql private_key_pem
     end
   end
 
@@ -232,7 +243,7 @@ describe 'PK' do
     let(:key) { Botan::PK::PublicKey.from_data(public_key_pem) }
 
     it 'exports correctly' do
-      expect(key.export(pem=true)).to eql public_key_pem
+      expect(key.export_pem).to eql public_key_pem
     end
   end
 end
