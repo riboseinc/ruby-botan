@@ -2,8 +2,8 @@ require 'spec_helper'
 require 'base64'
 
 describe Botan::X509Cert do
-  context Botan::X509Cert.method(:load) do
-    let(:cert) { Botan::X509Cert.load(File.read('spec/data/CSCA.CSCA.csca-germany.1.crt')) }
+  context Botan::X509Cert.method(:from_data) do
+    let(:cert) { Botan::X509Cert.from_data(File.read('spec/data/CSCA.CSCA.csca-germany.1.crt')) }
 
     it 'has the correct fingerprint' do
       expect(
@@ -50,8 +50,8 @@ Q8WpvOE='
     end
   end
 
-  context Botan::X509Cert.method(:load_file) do
-    let(:cert) { Botan::X509Cert.load_file('spec/data/CSCA.CSCA.csca-germany.1.crt') }
+  context Botan::X509Cert.method(:from_file) do
+    let(:cert) { Botan::X509Cert.from_file('spec/data/CSCA.CSCA.csca-germany.1.crt') }
 
     it 'has the correct fingerprint' do
       expect(

@@ -14,13 +14,13 @@ module Botan
       LibBotan.botan_x509_cert_destroy(ptr)
     end
 
-    def self.load_file(filename)
+    def self.from_file(filename)
       ptr = FFI::MemoryPointer.new(:pointer)
       Botan.call_ffi(:botan_x509_cert_load_file, ptr, filename)
       X509Cert.new(ptr.read_pointer)
     end
 
-    def self.load(bytes)
+    def self.from_data(bytes)
       ptr = FFI::MemoryPointer.new(:pointer)
       buf = FFI::MemoryPointer.new(:uint8, bytes.bytesize)
       buf.write_bytes(bytes)
