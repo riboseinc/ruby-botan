@@ -25,12 +25,12 @@ module Botan
       length_ptr.read(:size_t)
     end
 
-    def update(x)
-      Botan.call_ffi(:botan_hash_update, @ptr, x, x.bytesize)
+    def update(data)
+      Botan.call_ffi(:botan_hash_update, @ptr, data, data.bytesize)
     end
 
-    def <<(x)
-      update(x)
+    def <<(data)
+      update(data)
     end
 
     def final
