@@ -16,5 +16,6 @@ require 'botan/pk/op/verify'
 require 'botan/pk/privatekey'
 require 'botan/pk/publickey'
 require 'botan/rng'
-require 'botan/x509'
+require 'botan/x509/constraints'
+require 'botan/x509/certificate'
 

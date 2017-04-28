@@ -1,9 +1,9 @@
 require 'spec_helper'
 require 'base64'
 
-describe Botan::X509Cert do
-  context Botan::X509Cert.method(:from_data) do
-    let(:cert) { Botan::X509Cert.from_data(File.read('spec/data/CSCA.CSCA.csca-germany.1.crt')) }
+describe Botan::X509::Certificate do
+  context Botan::X509::Certificate.method(:from_data) do
+    let(:cert) { Botan::X509::Certificate.from_data(File.read('spec/data/CSCA.CSCA.csca-germany.1.crt')) }
 
     it 'has the correct fingerprint' do
       expect(
@@ -61,10 +61,22 @@ Q8WpvOE='
     it 'returns a string representation' do
       expect(cert.to_s.class).to eql String
     end
+
+    it 'has correct allowed usages' do
+      expect(cert.allowed_usage?(Botan::X509::Constraints::DIGITAL_SIGNATURE)).to eql false
+      expect(cert.allowed_usage?(Botan::X509::Constraints::NON_REPUDIATION)).to eql false
+      expect(cert.allowed_usage?(Botan::X509::Constraints::KEY_ENCIPHERMENT)).to eql false
+      expect(cert.allowed_usage?(Botan::X509::Constraints::DATA_ENCIPHERMENT)).to eql false
+      expect(cert.allowed_usage?(Botan::X509::Constraints::KEY_AGREEMENT)).to eql false
+      expect(cert.allowed_usage?(Botan::X509::Constraints::KEY_CERT_SIGN)).to eql true
+      expect(cert.allowed_usage?(Botan::X509::Constraints::CRL_SIGN)).to eql true
+      expect(cert.allowed_usage?(Botan::X509::Constraints::ENCIPHER_ONLY)).to eql false
+      expect(cert.allowed_usage?(Botan::X509::Constraints::DECIPHER_ONLY)).to eql false
+    end
   end
 
-  context Botan::X509Cert.method(:from_file) do
-    let(:cert) { Botan::X509Cert.from_file('spec/data/CSCA.CSCA.csca-germany.1.crt') }
+  context Botan::X509::Certificate.method(:from_file) do
+    let(:cert) { Botan::X509::Certificate.from_file('spec/data/CSCA.CSCA.csca-germany.1.crt') }
 
     it 'has the correct fingerprint' do
       expect(
