@@ -103,7 +103,13 @@ module Botan
       Botan::PK::PublicKey.new(pub)
     end
 
-    def subject_info(key, index)
+    def issuer_info(key, index=0)
+      Botan.call_ffi_with_buffer(lambda {|b,bl|
+        LibBotan.botan_x509_cert_get_issuer_dn(@ptr, key, index, b, bl)
+      }, string: true)
+    end
+
+    def subject_info(key, index=0)
       Botan.call_ffi_with_buffer(lambda {|b,bl|
         LibBotan.botan_x509_cert_get_subject_dn(@ptr, key, index, b, bl)
       }, string: true)

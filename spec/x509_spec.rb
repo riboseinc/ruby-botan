@@ -42,11 +42,24 @@ Q8WpvOE='
     end
 
     it 'has correct subject fields' do
-      expect(cert.subject_info('Name', 0)).to eql 'csca-germany'
-      expect(cert.subject_info('Email', 0)).to eql 'csca-germany@bsi.bund.de'
-      expect(cert.subject_info('Organization', 0)).to eql 'bund'
-      expect(cert.subject_info('Organizational Unit', 0)).to eql 'bsi'
-      expect(cert.subject_info('Country', 0)).to eql 'DE'
+      expect(cert.subject_info('Country')).to eql 'DE'
+      expect(cert.subject_info('Organization')).to eql 'bund'
+      expect(cert.subject_info('Organizational Unit')).to eql 'bsi'
+      expect(cert.subject_info('SerialNumber')).to eql '4567'
+      expect(cert.subject_info('Name')).to eql 'csca-germany'
+      expect(cert.subject_info('Email')).to eql 'csca-germany@bsi.bund.de'
+    end
+
+    it 'has correct issuer fields' do
+      expect(cert.issuer_info('Country')).to eql 'DE'
+      expect(cert.issuer_info('Organization')).to eql 'bund'
+      expect(cert.issuer_info('Organizational Unit')).to eql 'bsi'
+      expect(cert.issuer_info('SerialNumber')).to eql '4567'
+      expect(cert.issuer_info('Name')).to eql 'csca-germany'
+    end
+
+    it 'returns a string representation' do
+      expect(cert.to_s.class).to eql String
     end
   end
 
@@ -90,11 +103,20 @@ Q8WpvOE='
     end
 
     it 'has correct subject fields' do
-      expect(cert.subject_info('Name', 0)).to eql 'csca-germany'
-      expect(cert.subject_info('Email', 0)).to eql 'csca-germany@bsi.bund.de'
-      expect(cert.subject_info('Organization', 0)).to eql 'bund'
-      expect(cert.subject_info('Organizational Unit', 0)).to eql 'bsi'
-      expect(cert.subject_info('Country', 0)).to eql 'DE'
+      expect(cert.subject_info('Country')).to eql 'DE'
+      expect(cert.subject_info('Organization')).to eql 'bund'
+      expect(cert.subject_info('Organizational Unit')).to eql 'bsi'
+      expect(cert.subject_info('SerialNumber')).to eql '4567'
+      expect(cert.subject_info('Name')).to eql 'csca-germany'
+      expect(cert.subject_info('Email')).to eql 'csca-germany@bsi.bund.de'
+    end
+
+    it 'has correct issuer fields' do
+      expect(cert.issuer_info('Country')).to eql 'DE'
+      expect(cert.issuer_info('Organization')).to eql 'bund'
+      expect(cert.issuer_info('Organizational Unit')).to eql 'bsi'
+      expect(cert.issuer_info('SerialNumber')).to eql '4567'
+      expect(cert.issuer_info('Name')).to eql 'csca-germany'
     end
 
     it 'returns a string representation' do
