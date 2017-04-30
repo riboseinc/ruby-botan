@@ -1,10 +1,15 @@
 module Botan
-  def self.call_ffi(fn, *args)
+  def self.call_ffi_rc(fn, *args)
     rc = LibBotan.method(fn).call(*args)
     if rc < 0
       raise Botan::Error, "FFI call to #{fn.to_s} failed"
     end
     rc
+  end
+
+  def self.call_ffi(fn, *args)
+    call_ffi_rc(fn, *args)
+    nil
   end
 
   def self.call_ffi_with_buffer(fn, guess: 4096, string: false)
