@@ -10,7 +10,6 @@ module Botan
     salt_buf = FFI::MemoryPointer.new(:uint8, salt.bytesize)
     salt_buf.write_bytes(salt)
 
-    label_buf = FFI::MemoryPointer.from_string(label)
     label_buf = FFI::MemoryPointer.new(:uint8, label.bytesize)
     label_buf.write_bytes(label)
     Botan.call_ffi(:botan_kdf,
