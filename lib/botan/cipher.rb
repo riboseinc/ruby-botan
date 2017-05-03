@@ -55,7 +55,7 @@ module Botan
 
     def valid_nonce_length?(nonce_len)
       rc = Botan.call_ffi_rc(:botan_cipher_valid_nonce_length, @ptr, nonce_len)
-      return (rc == 1) ? true : false
+      rc == 1
     end
 
     def clear
