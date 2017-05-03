@@ -75,7 +75,7 @@ module Botan
     end
 
     def start(nonce)
-      nonce_buf = FFI::MemoryPointer.new(:uint8, nonce.bytesize)
+      nonce_buf = FFI::MemoryPointer.from_data(nonce)
       Botan.call_ffi(:botan_cipher_start, @ptr, nonce_buf, nonce_buf.size)
     end
 
@@ -99,10 +99,13 @@ module Botan
     def _update(data, final:)
       inp = data ? data : ''
       flags = final ? 1 : 0
-      out_buf = FFI::MemoryPointer.new(:uint8, inp.bytesize + (final ? tag_length() : 0))
+      out_buf_size = inp.bytesize + (final ? tag_length : 0)
+      # FIXME botan currently lacks a way of determining the size required
+      # here, taking in to account padding mechanism, etc.
+      out_buf_size += 128
+      out_buf = FFI::MemoryPointer.new(:uint8, out_buf_size)
       out_written_ptr = FFI::MemoryPointer.new(:size_t)
-      input_buf = FFI::MemoryPointer.new(:uint8, inp.bytesize)
-      input_buf.write_bytes(inp)
+      input_buf = FFI::MemoryPointer.from_data(inp)
       inp_consumed_ptr = FFI::MemoryPointer.new(:size_t)
       Botan.call_ffi(:botan_cipher_update, @ptr, flags, out_buf, out_buf.size,
                            out_written_ptr, input_buf, input_buf.size,
