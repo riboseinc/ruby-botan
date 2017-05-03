@@ -32,6 +32,15 @@ module Botan
     end
   end
 
+  # TODO: Upstream this.
+  class << FFI::MemoryPointer
+    def from_data(data)
+      buf = FFI::MemoryPointer.new(:uint8, data.bytesize)
+      buf.write_bytes(data)
+      buf
+    end
+  end if not FFI::MemoryPointer.respond_to?(:from_data)
+
   def self.hex_encode(data)
     data.unpack('H*')[0]
   end
