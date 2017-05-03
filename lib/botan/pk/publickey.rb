@@ -16,8 +16,7 @@ module Botan
 
       def self.from_data(data)
         ptr = FFI::MemoryPointer.new(:pointer)
-        buf = FFI::MemoryPointer.new(:uint8, data.bytesize)
-        buf.write_bytes(data)
+        buf = FFI::MemoryPointer.from_data(data)
         Botan.call_ffi(:botan_pubkey_load, ptr, buf, buf.size)
         PublicKey.new(ptr.read_pointer)
       end

@@ -19,8 +19,7 @@ module Botan
       end
 
       def encrypt(msg, rng: Botan::RNG.new)
-        msg_buf = FFI::MemoryPointer.new(:uint8, msg.bytesize)
-        msg_buf.write_bytes(msg)
+        msg_buf = FFI::MemoryPointer.from_data(msg)
         Botan.call_ffi_with_buffer(lambda {|b, bl|
           LibBotan.botan_pk_op_encrypt(@ptr, rng.ptr, b, bl, msg_buf, msg_buf.size)
         })

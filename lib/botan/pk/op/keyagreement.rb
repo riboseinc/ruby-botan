@@ -22,10 +22,8 @@ module Botan
       end
 
       def agree(other_key:, key_len:, salt:)
-        other_buf = FFI::MemoryPointer.new(:uint8, other_key.bytesize)
-        other_buf.write_bytes(other_key)
-        salt_buf = FFI::MemoryPointer.new(:uint8, salt.bytesize)
-        salt_buf.write_bytes(salt)
+        other_buf = FFI::MemoryPointer.from_data(other_key)
+        salt_buf = FFI::MemoryPointer.from_data(salt)
         Botan.call_ffi_with_buffer(lambda {|b,bl|
           LibBotan.botan_pk_op_key_agreement(@ptr, b, bl,
                                              other_buf, other_buf.size,

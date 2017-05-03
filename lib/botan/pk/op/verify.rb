@@ -19,8 +19,7 @@ module Botan
       end
 
       def update(msg)
-        msg_buf = FFI::MemoryPointer.new(:uint8, msg.bytesize)
-        msg_buf.write_bytes(msg)
+        msg_buf = FFI::MemoryPointer.from_data(msg)
         Botan.call_ffi(:botan_pk_op_verify_update, @ptr, msg_buf, msg_buf.size)
       end
 
@@ -29,9 +28,9 @@ module Botan
       end
 
       def check_signature(signature)
-        sig_buf = FFI::MemoryPointer.new(:uint8, signature.bytesize)
-        sig_buf.write_bytes(signature)
-        rc = LibBotan.botan_pk_op_verify_finish(@ptr, sig_buf, sig_buf.size)
+        sig_buf = FFI::MemoryPointer.from_data(signature)
+        rc = Botan.call_ffi_rc(:botan_pk_op_verify_finish,
+                               @ptr, sig_buf, sig_buf.size)
         rc == 0
       end
     end # class

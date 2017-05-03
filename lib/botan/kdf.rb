@@ -4,14 +4,9 @@ module Botan
                salt: RNG.get(DEFAULT_KDF_SALT_LENGTH))
     out_buf = FFI::MemoryPointer.new(:uint8, key_len)
 
-    secret_buf = FFI::MemoryPointer.new(:uint8, secret.bytesize)
-    secret_buf.write_bytes(secret)
-
-    salt_buf = FFI::MemoryPointer.new(:uint8, salt.bytesize)
-    salt_buf.write_bytes(salt)
-
-    label_buf = FFI::MemoryPointer.new(:uint8, label.bytesize)
-    label_buf.write_bytes(label)
+    secret_buf = FFI::MemoryPointer.from_data(secret)
+    salt_buf = FFI::MemoryPointer.from_data(salt)
+    label_buf = FFI::MemoryPointer.from_data(label)
     Botan.call_ffi(:botan_kdf,
                    algo, out_buf, out_buf.size,
                    secret_buf, secret_buf.size,
@@ -25,8 +20,7 @@ module Botan
                  iterations: DEFAULT_KDF_ITERATIONS,
                  salt: RNG.get(DEFAULT_KDF_SALT_LENGTH))
     out_buf = FFI::MemoryPointer.new(:uint8, key_len)
-    salt_buf = FFI::MemoryPointer.new(:uint8, salt.bytesize)
-    salt_buf.write_bytes(salt)
+    salt_buf = FFI::MemoryPointer.from_data(salt)
     Botan.call_ffi(:botan_pbkdf,
                    algo, out_buf, key_len,
                    password, salt_buf, salt_buf.size, iterations)
@@ -39,8 +33,7 @@ module Botan
                        algo: DEFAULT_PBKDF_ALGO,
                        salt: RNG.get(DEFAULT_KDF_SALT_LENGTH))
     out_buf = FFI::MemoryPointer.new(:uint8, key_len)
-    salt_buf = FFI::MemoryPointer.new(:uint8, salt.bytesize)
-    salt_buf.write_bytes(salt)
+    salt_buf = FFI::MemoryPointer.from_data(salt)
     iterations_ptr = FFI::MemoryPointer.new(:size_t)
     Botan.call_ffi(:botan_pbkdf_timed,
                    algo, out_buf, key_len,

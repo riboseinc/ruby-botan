@@ -2,10 +2,8 @@ require 'botan/utils'
 
 module Botan
   def self.mceies_encrypt(public_key:, plaintext:, ad:, aead: DEFAULT_AEAD, rng: Botan::RNG.new)
-    pt_buf = FFI::MemoryPointer.new(:uint8, plaintext.bytesize)
-    pt_buf.write_bytes(plaintext)
-    ad_buf = FFI::MemoryPointer.new(:uint8, ad.bytesize)
-    ad_buf.write_bytes(ad)
+    pt_buf = FFI::MemoryPointer.from_data(plaintext)
+    ad_buf = FFI::MemoryPointer.from_data(ad)
     call_ffi_with_buffer(lambda {|b,bl|
       LibBotan.botan_mceies_encrypt(public_key.ptr,
                                     rng.ptr,
@@ -20,10 +18,8 @@ module Botan
   end
 
   def self.mceies_decrypt(private_key:, ciphertext:, ad:, aead: DEFAULT_AEAD)
-    ct_buf = FFI::MemoryPointer.new(:uint8, ciphertext.bytesize)
-    ct_buf.write_bytes(ciphertext)
-    ad_buf = FFI::MemoryPointer.new(:uint8, ad.bytesize)
-    ad_buf.write_bytes(ad)
+    ct_buf = FFI::MemoryPointer.from_data(ciphertext)
+    ad_buf = FFI::MemoryPointer.from_data(ad)
     call_ffi_with_buffer(lambda {|b,bl|
       LibBotan.botan_mceies_decrypt(private_key.ptr,
                                     aead,
