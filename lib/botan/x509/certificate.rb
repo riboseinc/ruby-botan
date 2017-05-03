@@ -128,7 +128,8 @@ module Botan
       end
 
       def allowed_usage?(usage)
-        rc = LibBotan.botan_x509_cert_allowed_usage(@ptr, usage)
+        rc = Botan.call_ffi_rc(:botan_x509_cert_allowed_usage,
+                               @ptr, usage)
         rc == 0
       end
     end # class
