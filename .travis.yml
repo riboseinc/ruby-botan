@@ -10,12 +10,18 @@ branches:
   only:
     - master
 
+env:
+  global:
+    - BOTAN_INSTALL="$HOME/builds/botan-install"
+    - LD_LIBRARY_PATH="${BOTAN_INSTALL}/lib"
+
 cache:
   bundler: true
   directories:
-    - ~/builds/libbotan
+    - "$BOTAN_INSTALL"
 
 before_install:
   - gem install bundler -v 1.13.7
-  - bash scripts/build-libbotan.sh
-  - export LD_LIBRARY_PATH=~/builds/libbotan
+
+install:
+  - ./ci/install.sh
