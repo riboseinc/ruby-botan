@@ -57,7 +57,13 @@ module LibBotan
   attach_function :botan_hash_init,
                   [:pointer, :string, :uint32],
                   :int
+  attach_function :botan_hash_copy_state,
+                  [:pointer, :pointer],
+                  :int
   attach_function :botan_hash_output_length,
+                  [:pointer, :pointer],
+                  :int
+  attach_function :botan_hash_block_size,
                   [:pointer, :pointer],
                   :int
   attach_function :botan_hash_update,
@@ -422,6 +428,14 @@ module LibBotan
                   :int
   attach_function :botan_pubkey_dsa_get_y,
                   [:pointer, :pointer],
+                  :int
+
+  # ElGamal specific functions
+  attach_function :botan_privkey_load_elgamal,
+                  [:pointer, :pointer, :pointer, :pointer],
+                  :int
+  attach_function :botan_pubkey_load_elgamal,
+                  [:pointer, :pointer, :pointer, :pointer],
                   :int
 
   # Public Key Encryption/Decryption
