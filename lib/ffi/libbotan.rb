@@ -27,6 +27,10 @@ module LibBotan
                   [],
                   :uint32
 
+  if botan_ffi_supports_api(20170327) != 0
+    raise 'The Botan library does not support the FFI API expected by this version of the Ruby module'
+  end
+
   # Utility Functions
   attach_function :botan_same_mem,
                   [:pointer, :pointer, :size_t],
@@ -541,9 +545,6 @@ module LibBotan
                   [:pointer, :uint],
                   :int
 
-  if botan_ffi_supports_api(20170327) != 0
-    raise 'The Botan library does not support the FFI API expected by this version of the Ruby module'
-  end
 
 end # module
 
