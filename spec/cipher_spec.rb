@@ -28,47 +28,47 @@ describe Botan::Cipher do
     end
 
     it 'encrypts and decrypts successfully' do
-      enc.set_key(key)
-      enc.start(iv)
+      enc.key = key
+      enc.iv = iv
       expect(enc.update('').bytesize).to eql 0
       ciphertext = enc.finish(plaintext)
 
-      dec.set_key(key)
-      dec.start(iv)
+      dec.key = key
+      dec.iv = iv
       decrypted = dec.finish(ciphertext)
 
       expect(plaintext).to eql decrypted
     end
 
     it 'can be cleared and reused' do
-      enc.set_key(key)
-      enc.start(iv)
+      enc.key = key
+      enc.iv = iv
       ciphertext = enc.finish(plaintext)
 
       enc.clear
-      enc.set_key(key)
-      enc.start(iv)
+      enc.key = key
+      enc.iv = iv
       expect(enc.finish(plaintext)).to eql ciphertext
 
       dec.clear
-      dec.set_key(key)
-      dec.start(iv)
+      dec.key = key
+      dec.iv = iv
       expect(dec.finish(ciphertext)).to eql plaintext
 
       dec.clear
-      dec.set_key(key)
-      dec.start(iv)
+      dec.key = key
+      dec.iv = iv
       expect(dec.finish(ciphertext)).to eql plaintext
     end
 
     it 'can be incrementally updated' do
-      enc.set_key(key)
-      enc.start(iv)
+      enc.key = key
+      enc.iv = iv
       ciphertext = enc.finish(plaintext)
 
       enc.clear
-      enc.set_key(key)
-      enc.start(iv)
+      enc.key = key
+      enc.iv = iv
       ciphertext2 = enc.update(plaintext[0..-2])
       ciphertext2 += enc.finish(plaintext[-1])
       expect(ciphertext2).to eql ciphertext
@@ -100,13 +100,13 @@ describe Botan::Cipher do
     end
 
     it 'encrypts and decrypts successfully' do
-      enc.set_key(key)
-      enc.start(iv)
+      enc.key = key
+      enc.iv = iv
       ciphertext = enc.finish(plaintext)
       expect(Botan.hex_encode(ciphertext)).to eql 'e232cd6ef50047801ee681ec30f61d53cfd6b0bca02fd03c1b234baa10ea82ac9dab8b960926433a19ce6dea08677e34'
 
-      dec.set_key(key)
-      dec.start(iv)
+      dec.key = key
+      dec.iv = iv
       decrypted = dec.finish(ciphertext)
 
       expect(plaintext).to eql decrypted

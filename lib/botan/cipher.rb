@@ -62,15 +62,17 @@ module Botan
       Botan.call_ffi(:botan_cipher_clear, @ptr)
     end
 
-    def set_key(key)
-      key_buf = FFI::MemoryPointer.new(:uint8, key.bytesize)
-      key_buf.write_bytes(key)
+    def key=(key)
+      key_buf = FFI::MemoryPointer.from_data(key)
       Botan.call_ffi(:botan_cipher_set_key, @ptr, key_buf, key_buf.size)
     end
 
-    def set_assoc_data(ad)
-      ad_buf = FFI::MemoryPointer.new(:uint8, ad.bytesize)
-      ad_buf.write_bytes(ad)
+    def iv=(iv)
+      start(iv)
+    end
+
+    def auth_data=(ad)
+      ad_buf = FFI::MemoryPointer.from_data(ad)
       Botan.call_ffi(:botan_cipher_set_associated_data, @ptr, ad_buf, ad.size)
     end
 
