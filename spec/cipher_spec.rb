@@ -112,5 +112,59 @@ describe Botan::Cipher do
       expect(plaintext).to eql decrypted
     end
   end
+
+  context 'AES-128/GCM' do
+    let(:enc) { Botan::Cipher.encryption('AES-128/GCM') }
+    let(:dec) { Botan::Cipher.decryption('AES-128/GCM') }
+    let(:key) { Botan::hex_decode('FEFFE9928665731C6D6A8F9467308308') }
+    let(:nonce) { Botan::hex_decode('CAFEBABEFACEDBADDECAF888') }
+    let(:input) { Botan::hex_decode('D9313225F88406E5A55909C5AFF5269A86A7A9531534F7DA2E4C303D8A318A721C3C0C95956809532FCF0E2449A6B525B16AEDF5AA0DE657BA637B39') }
+    let(:ad) { Botan::hex_decode('FEEDFACEDEADBEEFFEEDFACEDEADBEEFABADDAD2') }
+    let(:output) { Botan::hex_decode('42831EC2217774244B7221B784D0D49CE3AA212F2C02A4E035C17E2329ACA12E21D514B25466931C7D8F6A5AAC84AA051BA30B396A0AAC973D58E0915BC94FBC3221A5DB94FAE95AE7121A47') }
+
+    it { expect(enc.authenticated?).to eql true }
+    it { expect(dec.authenticated?).to eql true }
+
+    it 'encrypts correctly' do
+      enc.key = key
+      enc.auth_data = ad
+      enc.iv = nonce
+      expect(enc.finish(input)).to eql output
+    end
+
+    it 'decrypts correctly' do
+      dec.key = key
+      dec.auth_data = ad
+      dec.iv = nonce
+      expect(dec.finish(output)).to eql input
+    end
+
+    it 'raises an error with modified message' do
+      dec.key = key
+      dec.auth_data = ad
+      dec.iv = nonce
+      bad_output = output
+      bad_output[bad_output.bytesize / 2] = 0xAA.chr
+      expect { dec.finish(bad_output) }.to raise_error Botan::Error
+    end
+
+    it 'raises an error with modified nonce' do
+      dec.key = key
+      dec.auth_data = ad
+      bad_nonce = nonce
+      bad_nonce[bad_nonce.bytesize / 2] = 0xAA.chr
+      dec.iv = nonce
+      expect { dec.finish(output) }.to raise_error Botan::Error
+    end
+
+    it 'raises an error with modified ad' do
+      dec.key = key
+      bad_ad = ad
+      bad_ad[bad_ad.bytesize / 2] = 0xAA.chr
+      dec.auth_data = bad_ad
+      dec.iv = nonce
+      expect { dec.finish(output) }.to raise_error Botan::Error
+    end
+  end
 end
 
