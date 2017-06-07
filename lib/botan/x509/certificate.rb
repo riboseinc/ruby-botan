@@ -75,7 +75,7 @@ module Botan
       end
 
       def fingerprint(hash_algo='SHA-256')
-        n = Botan::Hash.new(hash_algo).output_length * 3
+        n = Botan::Digest.new(hash_algo).length * 3
         Botan.call_ffi_with_buffer(lambda {|b,bl|
           LibBotan.botan_x509_cert_get_fingerprint(@ptr, hash_algo, b, bl)
         }, guess: n, string: true)

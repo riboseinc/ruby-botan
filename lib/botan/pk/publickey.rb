@@ -46,7 +46,7 @@ module Botan
       end
 
       def fingerprint(hash='SHA-256')
-        n = Hash.new(hash).output_length
+        n = Botan::Digest.new(hash).length
         buf = FFI::MemoryPointer.new(:uint8, n)
         buf_len_ptr = FFI::MemoryPointer.new(:size_t)
         buf_len_ptr.write(:size_t, n)
