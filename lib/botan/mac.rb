@@ -25,17 +25,15 @@ module Botan
       length_ptr.read(:size_t)
     end
 
-    def set_key(key)
+    def key=(key)
       Botan.call_ffi(:botan_mac_set_key, @ptr, key, key.bytesize)
     end
 
-    def update(x)
-      Botan.call_ffi(:botan_mac_update, @ptr, x, x.bytesize)
+    def update(data)
+      Botan.call_ffi(:botan_mac_update, @ptr, data, data.bytesize)
     end
 
-    def <<(x)
-      update(x)
-    end
+    alias << update
 
     def final
       out_buf = FFI::MemoryPointer.new(:uint8, output_length())
