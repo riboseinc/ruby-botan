@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Botan.method(:bcrypt) do
-  let(:phash) { Botan.bcrypt('password') }
+describe Botan.method(:bcrypt_hash) do
+  let(:phash) { Botan.bcrypt_hash('password') }
 
   it 'creates hashes with the expected length' do
     expect(phash.bytesize).to eql 60
@@ -10,7 +10,7 @@ end
 
 describe Botan.method(:bcrypt_valid?) do
   let(:password) { 'password' }
-  let(:phash) { Botan.bcrypt(password, work_factor: 5, rng: Botan::RNG.new) }
+  let(:phash) { Botan.bcrypt_hash(password, work_factor: 5, rng: Botan::RNG.new) }
 
   it 'accepts correct passwords' do
     expect(

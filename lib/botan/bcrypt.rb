@@ -1,5 +1,5 @@
 module Botan
-  def self.bcrypt(password, work_factor: 10, rng: Botan::RNG.new)
+  def self.bcrypt_hash(password, work_factor: 10, rng: Botan::RNG.new)
     out_len = 64
     out_buf = FFI::MemoryPointer.new(:uint8, out_len)
     flags = 0
