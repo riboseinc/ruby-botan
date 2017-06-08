@@ -14,7 +14,7 @@ module Botan
   end
 
   def self.bcrypt_valid?(password:, phash:)
-    rc = LibBotan.botan_bcrypt_is_valid(password, phash)
+    rc = Botan.call_ffi_rc(:botan_bcrypt_is_valid, password, phash)
     return rc == 0
   end
 end # module
