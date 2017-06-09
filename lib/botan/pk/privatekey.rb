@@ -14,23 +14,12 @@ module Botan
         LibBotan.botan_privkey_destroy(ptr)
       end
 
-      def self.generate(alg, param, rng)
+      def self.generate(algo, params: nil, rng: Botan::RNG.new)
         ptr = FFI::MemoryPointer.new(:pointer)
-        case alg
-        when 'rsa'
-          Botan.call_ffi(:botan_privkey_create_rsa, ptr, rng.ptr, param)
-        when 'ecdsa'
-          Botan.call_ffi(:botan_privkey_create_ecdsa, ptr, rng.ptr, param)
-        when 'ecdh'
-          Botan.call_ffi(:botan_privkey_create_ecdh, ptr, rng.ptr, param)
-        when 'mce', 'mceliece'
-          Botan.call_ffi(:botan_privkey_create_mceliece, ptr, rng.ptr, param[0], param[1])
-        else
-          raise Botan::Error, "Invalid algorithm #{alg}"
-        end
+        Botan.call_ffi(:botan_privkey_create, ptr, algo, params, rng.ptr)
         ptr = ptr.read_pointer
         if ptr.null?
-          raise Botan::Error, "botan_privkey_create_#{alg} failed"
+          raise Botan::Error, "botan_privkey_create failed"
         end
         PrivateKey.new(ptr)
       end

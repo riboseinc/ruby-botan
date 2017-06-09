@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'PK' do
   context 'rsa generation' do
-    let(:priv) { Botan::PK::PrivateKey.generate('rsa', 1024, Botan::RNG.new) }
+    let(:priv) { Botan::PK::PrivateKey.generate('RSA', params: '1024', rng: Botan::RNG.new) }
     let(:pub) { priv.public_key }
     let(:enc) { Botan::PK::Encrypt.new(public_key: pub, padding: 'EME1(SHA-256)') }
     let(:dec) { Botan::PK::Decrypt.new(private_key: priv, padding: 'EME1(SHA-256)') }
@@ -111,7 +111,7 @@ describe 'PK' do
   end
 
   context 'ecdsa generation' do
-    let(:priv) { Botan::PK::PrivateKey.generate('ecdsa', 'secp384r1', Botan::RNG.new) }
+    let(:priv) { Botan::PK::PrivateKey.generate('ECDSA', params: 'secp384r1', rng: Botan::RNG.new) }
     let(:pub) { priv.public_key }
     let(:sign) { Botan::PK::Sign.new(private_key: priv, padding: 'EMSA1(SHA-384)') }
     let(:verify) { Botan::PK::Verify.new(public_key: pub, padding: 'EMSA1(SHA-384)') }
@@ -201,8 +201,8 @@ describe 'PK' do
     let(:b_rng) { Botan::RNG.new('user') }
     let(:dh_kdf) { 'KDF2(SHA-384)' }
     let(:group) { 'secp256r1' }
-    let(:a_dh_priv) { Botan::PK::PrivateKey.generate('ecdh', group, Botan::RNG.new) }
-    let(:b_dh_priv) { Botan::PK::PrivateKey.generate('ecdh', group, Botan::RNG.new) }
+    let(:a_dh_priv) { Botan::PK::PrivateKey.generate('ECDH', params: group, rng: Botan::RNG.new) }
+    let(:b_dh_priv) { Botan::PK::PrivateKey.generate('ECDH', params: group, rng: Botan::RNG.new) }
     let(:a_dh) { Botan::PK::KeyAgreement.new(key: a_dh_priv, kdf: dh_kdf) }
     let(:b_dh) { Botan::PK::KeyAgreement.new(key: b_dh_priv, kdf: dh_kdf) }
     let(:a_dh_pub) { a_dh.public_value }
@@ -224,7 +224,7 @@ describe 'PK' do
   context Botan::PK::PrivateKey.method(:generate) do
     it 'errors on invalid algorithm' do
       expect {
-        Botan::PK::PrivateKey.generate('fake', nil, Botan::RNG.new)
+        Botan::PK::PrivateKey.generate('fake')
       }.to raise_error Botan::Error
     end
   end
