@@ -1,24 +1,24 @@
 require 'spec_helper'
 
-describe Botan.method(:kdf) do
+describe Botan::KDF.method(:kdf) do
   it 'produces the expected output' do
     expect(
-      Botan.kdf(algo: 'KDF2(SHA-1)',
-                secret: Botan.hex_decode('701F3480DFE95F57941F804B1B2413EF'),
-                key_len: 7,
-                salt: Botan.hex_decode('55A4E9DD5F4CA2EF82'),
-                label: '')
+      Botan::KDF.kdf(algo: 'KDF2(SHA-1)',
+                     secret: Botan.hex_decode('701F3480DFE95F57941F804B1B2413EF'),
+                     key_len: 7,
+                     salt: Botan.hex_decode('55A4E9DD5F4CA2EF82'),
+                     label: '')
     ).to eql Botan.hex_decode('fbecb3ccfeec6e')
   end
 end
 
-describe Botan.method(:pbkdf) do
+describe Botan::KDF.method(:pbkdf) do
   let(:result) {
-      Botan.pbkdf(algo: 'PBKDF2(SHA-1)',
-                  password: '',
-                  key_len: 32,
-                  iterations: 10000,
-                  salt: Botan.hex_decode('0001020304050607'))
+      Botan::KDF.pbkdf(algo: 'PBKDF2(SHA-1)',
+                       password: '',
+                       key_len: 32,
+                       iterations: 10000,
+                       salt: Botan.hex_decode('0001020304050607'))
   }
   let(:salt) { result[:salt] }
   let(:iterations) { result[:iterations] }
@@ -37,12 +37,12 @@ describe Botan.method(:pbkdf) do
   end
 end
 
-describe Botan.method(:pbkdf_timed) do
+describe Botan::KDF.method(:pbkdf_timed) do
   let(:result) {
-      Botan.pbkdf_timed(algo: 'PBKDF2(SHA-256)',
-                        password: 'xyz',
-                        key_len: 32,
-                        ms_to_run: 200)
+      Botan::KDF.pbkdf_timed(algo: 'PBKDF2(SHA-256)',
+                             password: 'xyz',
+                             key_len: 32,
+                             ms_to_run: 200)
   }
   let(:salt) { result[:salt] }
   let(:iterations) { result[:iterations] }
@@ -62,7 +62,7 @@ describe Botan.method(:pbkdf_timed) do
 
   it 'produces the same output with the same inputs (timed and non-timed)' do
     expect(
-      Botan.pbkdf(algo: 'PBKDF2(SHA-256)',
+      Botan::KDF.pbkdf(algo: 'PBKDF2(SHA-256)',
                   password: 'xyz',
                   key_len: 32,
                   iterations: iterations,
