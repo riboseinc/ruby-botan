@@ -45,17 +45,17 @@ describe Botan::Cipher do
       enc.iv = iv
       ciphertext = enc.finish(plaintext)
 
-      enc.clear
+      enc.reset
       enc.key = key
       enc.iv = iv
       expect(enc.finish(plaintext)).to eql ciphertext
 
-      dec.clear
+      dec.reset
       dec.key = key
       dec.iv = iv
       expect(dec.finish(ciphertext)).to eql plaintext
 
-      dec.clear
+      dec.reset
       dec.key = key
       dec.iv = iv
       expect(dec.finish(ciphertext)).to eql plaintext
@@ -66,7 +66,7 @@ describe Botan::Cipher do
       enc.iv = iv
       ciphertext = enc.finish(plaintext)
 
-      enc.clear
+      enc.reset
       enc.key = key
       enc.iv = iv
       ciphertext2 = enc.update(plaintext[0..-2])

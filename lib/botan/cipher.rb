@@ -58,7 +58,7 @@ module Botan
       rc == 1
     end
 
-    def clear
+    def reset
       Botan.call_ffi(:botan_cipher_clear, @ptr)
     end
 
