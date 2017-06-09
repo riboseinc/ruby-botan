@@ -20,6 +20,7 @@ module Botan
       def update(msg)
         msg_buf = FFI::MemoryPointer.from_data(msg)
         Botan.call_ffi(:botan_pk_op_sign_update, @ptr, msg_buf, msg_buf.size)
+        self
       end
 
       def <<(msg)

@@ -21,6 +21,7 @@ module Botan
 
     def reseed(bits=256)
       Botan.call_ffi(:botan_rng_reseed, @ptr, bits)
+      self
     end
 
     def get(length)

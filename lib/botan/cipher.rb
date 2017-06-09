@@ -60,6 +60,7 @@ module Botan
 
     def reset
       Botan.call_ffi(:botan_cipher_clear, @ptr)
+      self
     end
 
     def key=(key)

@@ -71,12 +71,14 @@ module Botan
 
     def update(data)
       Botan.call_ffi(:botan_hash_update, @ptr, data, data.bytesize)
+      self
     end
 
     alias << update
 
     def reset
       Botan.call_ffi(:botan_hash_clear, @ptr)
+      self
     end
 
     private

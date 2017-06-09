@@ -17,6 +17,7 @@ module Botan
 
     def clear
       Botan.call_ffi(:botan_mac_clear, @ptr)
+      self
     end
 
     def output_length
@@ -31,6 +32,7 @@ module Botan
 
     def update(data)
       Botan.call_ffi(:botan_mac_update, @ptr, data, data.bytesize)
+      self
     end
 
     alias << update
