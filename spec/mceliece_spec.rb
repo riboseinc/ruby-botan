@@ -7,16 +7,16 @@ describe 'mceies' do
   let(:ad) { 'mce AD' }
   let(:aead) { 'ChaCha20Poly1305' }
   let(:ciphertext) {
-    Botan.mceies_encrypt(public_key: pub,
-                         aead: aead,
-                         plaintext: plaintext,
-                         ad: ad)
+    Botan::PK.mceies_encrypt(public_key: pub,
+                             aead: aead,
+                             plaintext: plaintext,
+                             ad: ad)
   }
   let(:decrypted) {
-    Botan.mceies_decrypt(private_key: priv,
-                         aead: aead,
-                         ciphertext: ciphertext,
-                         ad: ad)
+    Botan::PK.mceies_decrypt(private_key: priv,
+                             aead: aead,
+                             ciphertext: ciphertext,
+                             ad: ad)
   }
 
   it 'encrypts and decrypts to the same value' do
