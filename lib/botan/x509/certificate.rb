@@ -4,11 +4,10 @@ module Botan
   module X509
     class Certificate
       def initialize(ptr)
-        @ptr = ptr
-        if @ptr.null?
+        if ptr.null?
           raise Botan::Error, 'X509::Certificate received a NULL pointer'
         end
-        @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
+        @ptr = FFI::AutoPointer.new(ptr, self.class.method(:destroy))
       end
 
       def self.destroy(ptr)

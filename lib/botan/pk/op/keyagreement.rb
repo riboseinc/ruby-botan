@@ -10,11 +10,11 @@ module Botan
         flags = 0
         Botan.call_ffi(:botan_pk_op_key_agreement_create,
                        ptr, key.ptr, kdf, flags)
-        @ptr = ptr.read_pointer
-        if @ptr.null?
+        ptr = ptr.read_pointer
+        if ptr.null?
           raise Botan::Error, 'botan_pk_op_key_agreement_create returned NULL'
         end
-        @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
+        @ptr = FFI::AutoPointer.new(ptr, self.class.method(:destroy))
         @public_value = Botan.call_ffi_with_buffer(lambda {|b,bl|
           LibBotan.botan_pk_op_key_agreement_export_public(key.ptr, b, bl)
         })

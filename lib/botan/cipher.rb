@@ -13,13 +13,13 @@ module Botan
     #                          false if it will be used for decryption.
     def initialize(algo, encrypt:)
       flags = encrypt ? 0 : 1
-      cipher_ptr = FFI::MemoryPointer.new(:pointer)
-      Botan.call_ffi(:botan_cipher_init, cipher_ptr, algo, flags)
-      @ptr = cipher_ptr.read_pointer
-      if @ptr.null?
+      ptr = FFI::MemoryPointer.new(:pointer)
+      Botan.call_ffi(:botan_cipher_init, ptr, algo, flags)
+      ptr = ptr.read_pointer
+      if ptr.null?
         raise Botan::Error, 'botan_cipher_init returned NULL'
       end
-      @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
+      @ptr = FFI::AutoPointer.new(ptr, self.class.method(:destroy))
     end
 
     # @api private

@@ -23,19 +23,19 @@ module Botan
       flags = 0
       ptr = FFI::MemoryPointer.new(:pointer)
       Botan.call_ffi(:botan_hash_init, ptr, algo, flags)
-      @ptr = ptr.read_pointer
-      if @ptr.null?
+      ptr = ptr.read_pointer
+      if ptr.null?
         raise Botan::Error, 'botan_hash_init returned NULL'
       end
-      @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
+      @ptr = FFI::AutoPointer.new(ptr, self.class.method(:destroy))
     end
 
     def initialize_copy(source)
       @name = source.name
       ptr = FFI::MemoryPointer.new(:pointer)
       Botan.call_ffi(:botan_hash_copy_state, ptr, source.ptr)
-      @ptr = ptr.read_pointer
-      @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
+      ptr = ptr.read_pointer
+      @ptr = FFI::AutoPointer.new(ptr, self.class.method(:destroy))
     end
 
     # @api private

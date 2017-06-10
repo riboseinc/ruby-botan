@@ -8,13 +8,13 @@ module Botan
     # @param algo [String] the MAC algorithm name
     def initialize(algo)
       flags = 0
-      mac_ptr = FFI::MemoryPointer.new(:pointer)
-      Botan.call_ffi(:botan_mac_init, mac_ptr, algo, flags)
-      @ptr = mac_ptr.read_pointer
-      if @ptr.null?
+      ptr = FFI::MemoryPointer.new(:pointer)
+      Botan.call_ffi(:botan_mac_init, ptr, algo, flags)
+      ptr = ptr.read_pointer
+      if ptr.null?
         raise Botan::Error, 'botan_mac_init returned NULL'
       end
-      @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
+      @ptr = FFI::AutoPointer.new(ptr, self.class.method(:destroy))
     end
 
     # @api private

@@ -5,13 +5,13 @@ module Botan
     attr_reader :ptr
     # @param rng_type [String] the type of RNG to create
     def initialize(rng_type=nil)
-      rng_ptr = FFI::MemoryPointer.new(:pointer)
-      Botan.call_ffi(:botan_rng_init, rng_ptr, rng_type)
-      @ptr = rng_ptr.read_pointer
-      if @ptr.null?
+      ptr = FFI::MemoryPointer.new(:pointer)
+      Botan.call_ffi(:botan_rng_init, ptr, rng_type)
+      ptr = ptr.read_pointer
+      if ptr.null?
         raise Botan::Error, 'botan_rng_init returned NULL'
       end
-      @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
+      @ptr = FFI::AutoPointer.new(ptr, self.class.method(:destroy))
     end
 
     # @api private

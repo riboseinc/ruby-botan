@@ -5,11 +5,10 @@ module Botan
       # @api private
       attr_reader :ptr
       def initialize(ptr)
-        @ptr = ptr
-        if @ptr.null?
+        if ptr.null?
           raise Botan::Error, 'PublicKey received a NULL pointer'
         end
-        @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
+        @ptr = FFI::AutoPointer.new(ptr, self.class.method(:destroy))
       end
 
       # @api private

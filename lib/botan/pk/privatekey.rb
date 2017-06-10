@@ -8,11 +8,10 @@ module Botan
       #
       # See {generate} and {from_data} instead.
       def initialize(ptr)
-        @ptr = ptr
-        if @ptr.null?
+        if ptr.null?
           raise Botan::Error, 'PrivateKey received a NULL pointer'
         end
-        @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
+        @ptr = FFI::AutoPointer.new(ptr, self.class.method(:destroy))
        end
 
       # @api private
