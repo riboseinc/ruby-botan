@@ -20,37 +20,23 @@ describe Botan::KDF.method(:pbkdf) do
                        iterations: 10000,
                        salt: Botan.hex_decode('0001020304050607'))
   }
-  let(:salt) { result[:salt] }
-  let(:iterations) { result[:iterations] }
-  let(:key) { result[:key] }
-
-  it 'returns the expected salt' do
-    expect(salt).to eql "\x00\x01\x02\x03\x04\x05\x06\x07"
-  end
-
-  it 'returns the expected iterations' do
-    expect(iterations).to eql 10000
-  end
 
   it 'produces the expected output' do
-    expect(key).to eql Botan.hex_decode('59B2B1143B4CB1059EC58D9722FB1C72471E0D85C6F7543BA5228526375B0127')
+    expect(result).to eql Botan.hex_decode('59B2B1143B4CB1059EC58D9722FB1C72471E0D85C6F7543BA5228526375B0127')
   end
 end
 
 describe Botan::KDF.method(:pbkdf_timed) do
+  let(:salt) { Botan::RNG.get(Botan::DEFAULT_KDF_SALT_LENGTH) }
   let(:result) {
       Botan::KDF.pbkdf_timed(algo: 'PBKDF2(SHA-256)',
                              password: 'xyz',
+                             salt: salt,
                              key_len: 32,
                              ms_to_run: 200)
   }
-  let(:salt) { result[:salt] }
   let(:iterations) { result[:iterations] }
   let(:key) { result[:key] }
-
-  it 'returns a salt of the expected size' do
-    expect(salt.bytesize).to eql Botan::DEFAULT_KDF_SALT_LENGTH
-  end
 
   it 'uses a valid number of iterations' do
     expect(iterations).to be >= 1
@@ -66,7 +52,7 @@ describe Botan::KDF.method(:pbkdf_timed) do
                   password: 'xyz',
                   key_len: 32,
                   iterations: iterations,
-                  salt: salt)[:key]
+                  salt: salt)
     ).to eql key
   end
 end
