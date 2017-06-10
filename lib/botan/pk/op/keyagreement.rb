@@ -1,7 +1,10 @@
 module Botan
   module PK
+    # Public Key Key Agreement Operation
     class KeyAgreement
       attr_reader :public_value
+      # @param key [String] the key
+      # @param kdf [String] the KDF algorithm name
       def initialize(key:, kdf: Botan::DEFAULT_KDF_ALGO)
         ptr = FFI::MemoryPointer.new(:pointer)
         flags = 0
@@ -17,6 +20,7 @@ module Botan
         })
       end
 
+      # @api private
       def self.destroy(ptr)
         LibBotan.botan_pk_op_key_agreement_destroy(ptr)
       end

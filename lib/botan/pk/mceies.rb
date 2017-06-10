@@ -2,6 +2,14 @@ require 'botan/utils'
 
 module Botan
   module PK
+    # Encrypts with McEliece.
+    #
+    # @param public_key [Botan::PK::PublicKey] the public key
+    # @param plaintext [String] the data to encrypt
+    # @param ad [String] the associated data
+    # @param aead [String] the (AEAD) cipher+mode
+    # @param rng [Botan::RNG] the RNG to use
+    # @return [String] the encrypted data
     def self.mceies_encrypt(public_key:, plaintext:, ad:,
                             aead: DEFAULT_AEAD,
                             rng: Botan::RNG.new)
@@ -20,6 +28,13 @@ module Botan
       })
     end
 
+    # Decrypts with McEliece.
+    #
+    # @param private_key [Botan::PK::PrivateKey] the private key
+    # @param ciphertext [String] the data to decrypt
+    # @param ad [String] the associated data
+    # @param aead [String] the (AEAD) cipher+mode
+    # @return [String] the decrypted data
     def self.mceies_decrypt(private_key:, ciphertext:, ad:,
                             aead: DEFAULT_AEAD)
       ct_buf = FFI::MemoryPointer.from_data(ciphertext)

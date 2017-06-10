@@ -1,8 +1,21 @@
 require 'digest'
 
 module Botan
+  # Class for calculating message digests using Botan's hash functions.
+  #
+  # This should behave nearly identically to {::Digest} and {OpenSSL::Digest}.
+  # Some differences are:
+  #
+  # * Algorithm names. Example: OpenSSL expects `RIPEMD160`, Botan
+  #   uses `RIPEMD-160`.
+  # * OIDs. Not currently supported.
+  #
+  # == Examples
+  # === examples/digest.rb
+  # {include:file:examples/digest.rb}
   class Digest < ::Digest::Class
     attr_reader :name
+    # @api private
     attr_reader :ptr
 
     def initialize(algo)
@@ -25,6 +38,7 @@ module Botan
       @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
     end
 
+    # @api private
     def self.destroy(ptr)
       LibBotan.botan_hash_destroy(ptr)
     end
@@ -57,23 +71,37 @@ module Botan
       const_set(method_name.upcase, klass)
     }
 
+    # Retrieve the block length for the hash.
+    #
+    # @return [Integer]
     def block_length
       length_ptr = FFI::MemoryPointer.new(:size_t)
       Botan.call_ffi(:botan_hash_block_size, @ptr, length_ptr)
       length_ptr.read(:size_t)
     end
 
+    # Retrieve the length of the digest.
+    #
+    # @return [Integer]
     def digest_length
       length_ptr = FFI::MemoryPointer.new(:size_t)
       Botan.call_ffi(:botan_hash_output_length, @ptr, length_ptr)
       length_ptr.read(:size_t)
     end
 
+    # Adds input to the digest computation.
+    #
+    # @param [String] data
+    # @return [self]
     def update(data)
       Botan.call_ffi(:botan_hash_update, @ptr, data, data.bytesize)
       self
     end
 
+    # Resets the instace back to a clean state, as if no data has
+    # been supplied.
+    #
+    # @return [self]
     def reset
       Botan.call_ffi(:botan_hash_clear, @ptr)
       self
@@ -90,6 +118,10 @@ module Botan
     end
   end # class
 
+  # Returns a Digest subclass by name.
+  #
+  # @param algo [String] the hash algorithm name
+  # @return [Class]
   def Digest(algo)
     Botan::Digest.const_get(algo)
   end

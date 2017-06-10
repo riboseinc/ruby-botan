@@ -1,5 +1,18 @@
 module Botan
+  # Key Derivation Functions
+  #
+  # == Examples
+  # === examples/kdf.rb
+  # {include:file:examples/kdf.rb}
   module KDF
+    # Derives a key using the given KDF algorithm.
+    #
+    # @param secret [String] the secret input
+    # @param key_length [Integer] the desired length of the key to produce
+    # @param label [String] purpose for the derived keying material
+    # @param algo [String] the KDF algorithm name
+    # @param salt [String] the randomly chosen salt
+    # @return [String] the derived key
     def self.kdf(secret:, key_length:,
                  label: '',
                  algo: DEFAULT_KDF_ALGO,
@@ -17,6 +30,14 @@ module Botan
       out_buf.read_bytes(key_length)
     end
 
+    # Derives a key using the given PBKDF algorithm.
+    #
+    # @param password [String] the password to derive the key from
+    # @param key_length [Integer] the desired length of the key to produce
+    # @param algo [String] the PBKDF algorithm name
+    # @param iterations [Integer] the number of iterations to use
+    # @param salt [String] the randomly chosen salt
+    # @return [String] the derived key
     def self.pbkdf(password:, key_length:,
                    algo: DEFAULT_PBKDF_ALGO,
                    iterations: DEFAULT_KDF_ITERATIONS,
@@ -29,6 +50,16 @@ module Botan
       out_buf.read_bytes(key_length)
     end
 
+    # Derives a key using the given PBKDF algorithm.
+    #
+    # @param password [String] the password to derive the key from
+    # @param key_length [Integer] teh desired length of the key to rpoduce
+    # @param milliseconds [Integer] the number of milliseconds to run
+    # @param algo [String] the PBKDF algorithm name
+    # @param salt [String] the randomly chosen salt
+    # @return [Hash<Symbol>]
+    #   * :iterations [Integer] the iteration count used
+    #   * :key [String] the derived key
     def self.pbkdf_timed(password:, key_length:, milliseconds:,
                          algo: DEFAULT_PBKDF_ALGO,
                          salt: RNG.get(DEFAULT_KDF_SALT_LENGTH))

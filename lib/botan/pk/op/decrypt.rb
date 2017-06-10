@@ -1,6 +1,11 @@
 module Botan
   module PK
+    # Public Key Decrypt Operation
+    #
+    # See {Botan::PK::PrivateKey#decrypt} for a simpler interface.
     class Decrypt
+      # @param private_key [Botan::PK::PrivateKey] the private key
+      # @param padding [String] the padding method name
       def initialize(private_key:, padding: nil)
         padding ||= Botan::DEFAULT_EME
         ptr = FFI::MemoryPointer.new(:pointer)
@@ -14,10 +19,15 @@ module Botan
         @ptr_auto = FFI::AutoPointer.new(@ptr, self.class.method(:destroy))
       end
 
+      # @api private
       def self.destroy(ptr)
         LibBotan.botan_pk_op_decrypt_destroy(ptr)
       end
 
+      # Decrypts the provided data.
+      #
+      # @param msg [String] the data
+      # @return [String] the decrypted data
       def decrypt(msg)
         msg_buf = FFI::MemoryPointer.from_data(msg)
         Botan.call_ffi_with_buffer(lambda {|b, bl|
