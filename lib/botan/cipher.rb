@@ -113,8 +113,9 @@ module Botan
       Botan.call_ffi(:botan_cipher_update, @ptr, flags, out_buf, out_buf.size,
                            out_written_ptr, input_buf, input_buf.size,
                            inp_consumed_ptr)
-      if inp_consumed_ptr.read(:size_t) != inp.bytesize
-        raise Botan::Error, 'botan_cipher_update did not consume all input'
+      consumed = inp_consumed_ptr.read(:size_t)
+      if consumed != inp.bytesize
+        raise Botan::Error, "botan_cipher_update did not consume all input (#{consumed} out of #{inp.bytesize} bytes)"
       end
       out_buf.read_bytes(out_written_ptr.read(:size_t))
     end
