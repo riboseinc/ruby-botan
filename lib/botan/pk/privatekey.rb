@@ -120,7 +120,9 @@ module Botan
       # @param cipher [String] the name of the cipher to use
       # @param pbkdf [String] the name of the PBKDF algorithm to use
       # @param rng [Botan::RNG] the RNG to use
-      # @return [String]
+      # @return [Hash<Symbol>]
+      #   * :iterations [Integer] the iteration count used
+      #   * :data [String] the PEM-encoded key
       def export_encrypted_pem_timed(password:,
                                      milliseconds:,
                                      cipher: nil,
@@ -142,7 +144,9 @@ module Botan
       # @param cipher [String] the name of the cipher to use
       # @param pbkdf [String] the name of the PBKDF algorithm to use
       # @param rng [Botan::RNG] the RNG to use
-      # @return [String]
+      # @return [Hash<Symbol>]
+      #   * :iterations [Integer] the iteration count used
+      #   * :data [String] the DER-encoded key
       def export_encrypted_der_timed(password:,
                                      milliseconds:,
                                      cipher: nil,
