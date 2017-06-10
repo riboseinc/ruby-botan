@@ -42,7 +42,7 @@ describe 'PK' do
     end
 
     it 'has a valid fingerprint length' do
-      expect(pub.fingerprint('SHA-256').length).to eql 64
+      expect(pub.fingerprint('SHA-256').length).to eql 32
     end
 
     it 'has a valid estimated strength' do
@@ -155,7 +155,7 @@ describe 'PK' do
     end
 
     it 'has a valid fingerprint length' do
-      expect(pub.fingerprint('SHA-256').length).to eql 64
+      expect(pub.fingerprint('SHA-256').length).to eql 32
     end
 
     it 'has a valid estimated strength' do

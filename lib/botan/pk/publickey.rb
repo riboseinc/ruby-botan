@@ -74,8 +74,7 @@ module Botan
         buf_len_ptr = FFI::MemoryPointer.new(:size_t)
         buf_len_ptr.write(:size_t, n)
         Botan.call_ffi(:botan_pubkey_fingerprint, @ptr, hash, buf, buf_len_ptr)
-        data = buf.read_bytes(buf_len_ptr.read(:size_t))
-        Botan.hex_encode(data)
+        buf.read_bytes(buf_len_ptr.read(:size_t))
       end
 
       # Checks whether the key appears to be valid.
