@@ -16,11 +16,15 @@ Gem::Specification.new do |spec|
   spec.extra_rdoc_files = %w(README.md)
   spec.require_paths = ["lib"]
 
+  spec.has_rdoc = "yard"
+  spec.metadata["yard.run"] = "yard"
+
   spec.add_development_dependency "bundler", "~> 1.13"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "simplecov"
-  spec.add_development_dependency "codecov"
+  spec.add_development_dependency "simplecov", "~> 0.14"
+  spec.add_development_dependency "codecov", "~> 0.1"
+  spec.add_development_dependency "yard", "~> 0.8.7"
 
-  spec.add_runtime_dependency 'ffi'
+  spec.add_runtime_dependency "ffi", "~> 1.9"
 end
