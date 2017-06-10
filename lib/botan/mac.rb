@@ -35,13 +35,22 @@ module Botan
       self
     end
 
-    alias << update
-
-    def final
+    def digest
       out_buf = FFI::MemoryPointer.new(:uint8, output_length())
       Botan.call_ffi(:botan_mac_final, @ptr, out_buf)
       out_buf.read_bytes(out_buf.size)
     end
+
+    def hexdigest
+      Botan.hex_encode(digest)
+    end
+
+    alias << update
+
+    # TODO: it's not safe to do this at the moment, since these
+    # methods mutate the state.
+    #alias inspect hexdigest
+    #alias to_s hexdigest
   end # class
 end # module
 

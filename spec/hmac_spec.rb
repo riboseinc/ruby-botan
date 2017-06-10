@@ -12,25 +12,25 @@ describe Botan::MAC do
   it 'produces the expected hash' do
     hmac.key = key
     hmac.update(Botan.hex_decode('616263'))
-    expect(hmac.final).to eql expected
+    expect(hmac.digest).to eql expected
   end
 
   it 'can be incrementally updated' do
     hmac.key = key
     hmac.update(Botan.hex_decode('6162'))
     hmac << "\x63"
-    expect(hmac.final).to eql expected
+    expect(hmac.digest).to eql expected
   end
 
   it 'can be cleared and reused' do
     hmac.key = key
     hmac.update(Botan.hex_decode('616263'))
-    expect(hmac.final).to eql expected
+    expect(hmac.digest).to eql expected
 
     hmac.reset
     hmac.key = key
     hmac.update(Botan.hex_decode('616263'))
-    expect(hmac.final).to eql expected
+    expect(hmac.digest).to eql expected
   end
 end
 
