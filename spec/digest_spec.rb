@@ -4,6 +4,10 @@ describe Botan::Digest do
   context 'MD5' do
     let(:md5) { Botan::Digest.new('MD5') }
 
+    it 'has the correct block length' do
+      expect(md5.block_length).to eql 64
+    end
+
     it 'produces the correct hash' do
       md5.update('test')
       expect(md5.digest).to eql Botan.hex_decode('098F6BCD4621D373CADE4E832627B4F6')
@@ -12,6 +16,10 @@ describe Botan::Digest do
 
   context 'SM3' do
     let(:sm3) { Botan::Digest.new('SM3') }
+
+    it 'has the correct block length' do
+      expect(sm3.block_length).to eql 64
+    end
 
     it 'produces the correct hash' do
       sm3 << 'a'
@@ -27,6 +35,12 @@ describe Botan::Digest do
       sm3 << ('abcd' * 16)
       expect(sm3.digest).to eql Botan.hex_decode('DEBE9FF92275B8A138604889C18E5A4D6FDB70E5387E5765293dCbA39C0C5732')
     end
+  end
+end
+
+describe Botan.method(:Digest) do
+  it '' do
+    expect(Botan.Digest('MD5')).to eql Botan::Digest::MD5
   end
 end
 
