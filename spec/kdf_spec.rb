@@ -33,7 +33,7 @@ describe Botan::KDF.method(:pbkdf_timed) do
                              password: 'xyz',
                              salt: salt,
                              key_length: 32,
-                             ms_to_run: 200)
+                             milliseconds: 200)
   }
   let(:iterations) { result[:iterations] }
   let(:key) { result[:key] }

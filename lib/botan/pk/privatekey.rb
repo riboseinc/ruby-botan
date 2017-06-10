@@ -72,26 +72,26 @@ module Botan
       end
 
       def export_encrypted_pem_timed(password:,
-                                     ms_to_run:,
+                                     milliseconds:,
                                      cipher: nil,
                                      pbkdf: nil,
                                      rng: Botan::RNG.new)
         export_encrypted_timed(password: password,
                                pem: true,
-                               ms_to_run: ms_to_run,
+                               milliseconds: milliseconds,
                                cipher: cipher,
                                pbkdf: pbkdf,
                                rng: rng)
       end
 
       def export_encrypted_der_timed(password:,
-                                     ms_to_run:,
+                                     milliseconds:,
                                      cipher: nil,
                                      pbkdf: nil,
                                      rng: Botan::RNG.new)
         export_encrypted_timed(password: password,
                                pem: false,
-                               ms_to_run: ms_to_run,
+                               milliseconds: milliseconds,
                                cipher: cipher,
                                pbkdf: pbkdf,
                                rng: rng)
@@ -153,7 +153,7 @@ module Botan
       end
 
       def export_encrypted_timed(password:,
-                                 ms_to_run:,
+                                 milliseconds:,
                                  pem: true,
                                  cipher: nil,
                                  pbkdf: nil,
@@ -162,7 +162,7 @@ module Botan
         iterations_ptr = FFI::MemoryPointer.new(:size_t)
         data = Botan.call_ffi_with_buffer(lambda {|b, bl|
           LibBotan.botan_privkey_export_encrypted_pbkdf_msec(
-            @ptr, b, bl, rng.ptr, password, ms_to_run,
+            @ptr, b, bl, rng.ptr, password, milliseconds,
             iterations_ptr, cipher, pbkdf, flags)
         }, string: pem)
         {data: data, iterations: iterations_ptr.read(:size_t)}

@@ -29,7 +29,7 @@ module Botan
       out_buf.read_bytes(key_length)
     end
 
-    def self.pbkdf_timed(password:, key_length:, ms_to_run:,
+    def self.pbkdf_timed(password:, key_length:, milliseconds:,
                          algo: DEFAULT_PBKDF_ALGO,
                          salt: RNG.get(DEFAULT_KDF_SALT_LENGTH))
       out_buf = FFI::MemoryPointer.new(:uint8, key_length)
@@ -38,7 +38,7 @@ module Botan
       Botan.call_ffi(:botan_pbkdf_timed,
                      algo, out_buf, key_length,
                      password, salt_buf, salt_buf.size,
-                     ms_to_run, iterations_ptr)
+                     milliseconds, iterations_ptr)
       return {iterations: iterations_ptr.read(:size_t),
               key: out_buf.read_bytes(key_length)}
     end
