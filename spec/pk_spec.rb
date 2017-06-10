@@ -212,10 +212,10 @@ describe 'PK' do
 
     it 'key agreement' do
       a_key = a_dh.agree(other_key: b_dh_pub,
-                         key_len: 32,
+                         key_length: 32,
                          salt: a_salt + b_salt)
       b_key = b_dh.agree(other_key: a_dh_pub,
-                         key_len: 32,
+                         key_length: 32,
                          salt: a_salt + b_salt)
       expect(a_key).to eql b_key
     end

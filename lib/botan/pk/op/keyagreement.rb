@@ -21,14 +21,14 @@ module Botan
         LibBotan.botan_pk_op_key_agreement_destroy(ptr)
       end
 
-      def agree(other_key:, key_len:, salt:)
+      def agree(other_key:, key_length:, salt:)
         other_buf = FFI::MemoryPointer.from_data(other_key)
         salt_buf = FFI::MemoryPointer.from_data(salt)
         Botan.call_ffi_with_buffer(lambda {|b,bl|
           LibBotan.botan_pk_op_key_agreement(@ptr, b, bl,
                                              other_buf, other_buf.size,
                                              salt_buf, salt_buf.size)
-        }, guess: key_len)
+        }, guess: key_length)
       end
     end # class
   end # module

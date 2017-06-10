@@ -5,7 +5,7 @@ describe Botan::KDF.method(:kdf) do
     expect(
       Botan::KDF.kdf(algo: 'KDF2(SHA-1)',
                      secret: Botan.hex_decode('701F3480DFE95F57941F804B1B2413EF'),
-                     key_len: 7,
+                     key_length: 7,
                      salt: Botan.hex_decode('55A4E9DD5F4CA2EF82'),
                      label: '')
     ).to eql Botan.hex_decode('fbecb3ccfeec6e')
@@ -16,7 +16,7 @@ describe Botan::KDF.method(:pbkdf) do
   let(:result) {
       Botan::KDF.pbkdf(algo: 'PBKDF2(SHA-1)',
                        password: '',
-                       key_len: 32,
+                       key_length: 32,
                        iterations: 10000,
                        salt: Botan.hex_decode('0001020304050607'))
   }
@@ -32,7 +32,7 @@ describe Botan::KDF.method(:pbkdf_timed) do
       Botan::KDF.pbkdf_timed(algo: 'PBKDF2(SHA-256)',
                              password: 'xyz',
                              salt: salt,
-                             key_len: 32,
+                             key_length: 32,
                              ms_to_run: 200)
   }
   let(:iterations) { result[:iterations] }
@@ -50,7 +50,7 @@ describe Botan::KDF.method(:pbkdf_timed) do
     expect(
       Botan::KDF.pbkdf(algo: 'PBKDF2(SHA-256)',
                   password: 'xyz',
-                  key_len: 32,
+                  key_length: 32,
                   iterations: iterations,
                   salt: salt)
     ).to eql key
