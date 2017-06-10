@@ -15,6 +15,12 @@ describe Botan::MAC do
     expect(hmac.digest).to eql expected
   end
 
+  it 'produces the expected hash (hex)' do
+    hmac.key = key
+    hmac.update(Botan.hex_decode('616263'))
+    expect(hmac.hexdigest).to eql Botan.hex_encode(expected)
+  end
+
   it 'can be incrementally updated' do
     hmac.key = key
     hmac.update(Botan.hex_decode('6162'))
