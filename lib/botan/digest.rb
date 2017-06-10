@@ -74,12 +74,12 @@ module Botan
       self
     end
 
-    alias << update
-
     def reset
       Botan.call_ffi(:botan_hash_clear, @ptr)
       self
     end
+
+    alias << update
 
     private
 
@@ -90,10 +90,10 @@ module Botan
     end
   end # class
 
-def Digest(algo)
-  Botan::Digest.const_get(algo)
-end
+  def Digest(algo)
+    Botan::Digest.const_get(algo)
+  end
 
-module_function :Digest
+  module_function :Digest
 end # module
 
