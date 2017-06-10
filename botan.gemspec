@@ -12,11 +12,8 @@ Gem::Specification.new do |spec|
   spec.summary       = "The Ruby interface for Botan."
   spec.homepage      = "https://www.ribose.com"
 
-  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
-    f.match(%r{^(test|spec|features)/})
-  end
-  spec.bindir        = "exe"
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.files         = `git ls-files -z`.split("\x0").grep(%r!^(lib)/!)
+  spec.extra_rdoc_files = %w(README.md)
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.13"
