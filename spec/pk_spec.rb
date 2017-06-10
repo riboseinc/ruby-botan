@@ -64,7 +64,7 @@ describe 'PK' do
       expect(priv.export_der.length).to be >= 1
     end
 
-    it 'can export the private key (encrypted)' do
+    it 'can export the private key (encrypted PEM)' do
       exported_pem = priv.export_encrypted_pem(password: 'test')
       expect(exported_pem.length).to be >= 1
 
@@ -74,10 +74,14 @@ describe 'PK' do
       expect(export[:iterations]).to be >= 1
     end
 
-    it 'can encrypt and decrypt' do
-      ctext = enc.encrypt(symkey, rng: rng)
-      decrypted = dec.decrypt(ctext)
-      expect(decrypted).to eql symkey
+    it 'can export the private key (encrypted DER)' do
+      exported_pem = priv.export_encrypted_der(password: 'test')
+      expect(exported_pem.length).to be >= 1
+
+      export = priv.export_encrypted_der_timed(password: 'test',
+                                               milliseconds: 5)
+      expect(export[:data].length).to be >= 1
+      expect(export[:iterations]).to be >= 1
     end
 
     it 'can encrypt and decrypt (shortcut)' do
