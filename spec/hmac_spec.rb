@@ -27,7 +27,7 @@ describe Botan::MAC do
     hmac.update(Botan.hex_decode('616263'))
     expect(hmac.final).to eql expected
 
-    hmac.clear
+    hmac.reset
     hmac.key = key
     hmac.update(Botan.hex_decode('616263'))
     expect(hmac.final).to eql expected

@@ -15,7 +15,7 @@ module Botan
       LibBotan.botan_mac_destroy(ptr)
     end
 
-    def clear
+    def reset
       Botan.call_ffi(:botan_mac_clear, @ptr)
       self
     end
