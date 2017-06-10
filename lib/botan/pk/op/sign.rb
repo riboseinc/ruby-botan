@@ -23,15 +23,13 @@ module Botan
         self
       end
 
-      def <<(msg)
-        update(msg)
-      end
-
       def finish(rng)
         Botan.call_ffi_with_buffer(lambda {|b, bl|
           LibBotan.botan_pk_op_sign_finish(@ptr, rng.ptr, b, bl)
         })
       end
+
+      alias << update
     end # class
   end # module
 end # module

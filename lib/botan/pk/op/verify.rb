@@ -24,16 +24,14 @@ module Botan
         self
       end
 
-      def <<(msg)
-        update(msg)
-      end
-
       def check_signature(signature)
         sig_buf = FFI::MemoryPointer.from_data(signature)
         rc = Botan.call_ffi_rc(:botan_pk_op_verify_finish,
                                @ptr, sig_buf, sig_buf.size)
         rc == 0
       end
+
+      alias << update
     end # class
   end # module
 end # module
