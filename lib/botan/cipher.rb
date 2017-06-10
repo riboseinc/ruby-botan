@@ -77,11 +77,6 @@ module Botan
       Botan.call_ffi(:botan_cipher_set_associated_data, @ptr, ad_buf, ad.size)
     end
 
-    def start(nonce)
-      nonce_buf = FFI::MemoryPointer.from_data(nonce)
-      Botan.call_ffi(:botan_cipher_start, @ptr, nonce_buf, nonce_buf.size)
-    end
-
     def update(data)
       _update(data, final: false)
     end
@@ -91,6 +86,11 @@ module Botan
     end
 
     private
+
+    def start(nonce)
+      nonce_buf = FFI::MemoryPointer.from_data(nonce)
+      Botan.call_ffi(:botan_cipher_start, @ptr, nonce_buf, nonce_buf.size)
+    end
 
     def key_lengths
       kmin_ptr = FFI::MemoryPointer.new(:size_t)
