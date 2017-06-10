@@ -68,8 +68,8 @@ describe 'PK' do
       exported_pem = priv.export_encrypted_pem(password: 'test')
       expect(exported_pem.length).to be >= 1
 
-      export = priv.export_encrypted_timed(password: 'test',
-                                           ms_to_run: 5)
+      export = priv.export_encrypted_pem_timed(password: 'test',
+                                               ms_to_run: 5)
       expect(export[:data].length).to be >= 1
       expect(export[:iterations]).to be >= 1
     end

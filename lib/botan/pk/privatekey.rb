@@ -45,20 +45,6 @@ module Botan
         export(pem: false)
       end
 
-      def export_encrypted(password:,
-                           pem: true,
-                           cipher: nil,
-                           pbkdf: nil,
-                           iterations: Botan::DEFAULT_KDF_ITERATIONS,
-                           rng: Botan::RNG.new)
-        flags = pem ? 1 : 0
-        Botan.call_ffi_with_buffer(lambda {|b, bl|
-          LibBotan.botan_privkey_export_encrypted_pbkdf_iter(
-            @ptr, b, bl, rng.ptr, password, iterations,
-            cipher, pbkdf, flags)
-        }, string: pem)
-      end
-
       def export_encrypted_pem(password:,
                                cipher: nil,
                                pbkdf: nil,
@@ -72,20 +58,43 @@ module Botan
                          rng: rng)
       end
 
-      def export_encrypted_timed(password:,
-                                 ms_to_run:,
-                                 pem: true,
-                                 cipher: nil,
-                                 pbkdf: nil,
-                                 rng: Botan::RNG.new)
-        flags = pem ? 1 : 0
-        iterations_ptr = FFI::MemoryPointer.new(:size_t)
-        data = Botan.call_ffi_with_buffer(lambda {|b, bl|
-          LibBotan.botan_privkey_export_encrypted_pbkdf_msec(
-            @ptr, b, bl, rng.ptr, password, ms_to_run,
-            iterations_ptr, cipher, pbkdf, flags)
-        }, string: pem)
-        {data: data, iterations: iterations_ptr.read(:size_t)}
+      def export_encrypted_der(password:,
+                               cipher: nil,
+                               pbkdf: nil,
+                               iterations: Botan::DEFAULT_KDF_ITERATIONS,
+                               rng: Botan::RNG.new)
+        export_encrypted(password: password,
+                         pem: true,
+                         cipher: cipher,
+                         pbkdf: pbkdf,
+                         iterations: iterations,
+                         rng: rng)
+      end
+
+      def export_encrypted_pem_timed(password:,
+                                     ms_to_run:,
+                                     cipher: nil,
+                                     pbkdf: nil,
+                                     rng: Botan::RNG.new)
+        export_encrypted_timed(password: password,
+                               pem: true,
+                               ms_to_run: ms_to_run,
+                               cipher: cipher,
+                               pbkdf: pbkdf,
+                               rng: rng)
+      end
+
+      def export_encrypted_der_timed(password:,
+                                     ms_to_run:,
+                                     cipher: nil,
+                                     pbkdf: nil,
+                                     rng: Botan::RNG.new)
+        export_encrypted_timed(password: password,
+                               pem: false,
+                               ms_to_run: ms_to_run,
+                               cipher: cipher,
+                               pbkdf: pbkdf,
+                               rng: rng)
       end
 
       def valid?(rng=nil, thorough=false)
@@ -127,6 +136,36 @@ module Botan
         Botan.call_ffi_with_buffer(lambda {|b, bl|
           LibBotan.botan_privkey_export(@ptr, b, bl, flags)
         }, string: pem)
+      end
+
+      def export_encrypted(password:,
+                           pem: true,
+                           cipher: nil,
+                           pbkdf: nil,
+                           iterations: Botan::DEFAULT_KDF_ITERATIONS,
+                           rng: Botan::RNG.new)
+        flags = pem ? 1 : 0
+        Botan.call_ffi_with_buffer(lambda {|b, bl|
+          LibBotan.botan_privkey_export_encrypted_pbkdf_iter(
+            @ptr, b, bl, rng.ptr, password, iterations,
+            cipher, pbkdf, flags)
+        }, string: pem)
+      end
+
+      def export_encrypted_timed(password:,
+                                 ms_to_run:,
+                                 pem: true,
+                                 cipher: nil,
+                                 pbkdf: nil,
+                                 rng: Botan::RNG.new)
+        flags = pem ? 1 : 0
+        iterations_ptr = FFI::MemoryPointer.new(:size_t)
+        data = Botan.call_ffi_with_buffer(lambda {|b, bl|
+          LibBotan.botan_privkey_export_encrypted_pbkdf_msec(
+            @ptr, b, bl, rng.ptr, password, ms_to_run,
+            iterations_ptr, cipher, pbkdf, flags)
+        }, string: pem)
+        {data: data, iterations: iterations_ptr.read(:size_t)}
       end
     end # class
   end # module
