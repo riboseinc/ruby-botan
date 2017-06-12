@@ -48,22 +48,22 @@ module Botan
     end
 
     {
-      sha1:       'SHA-1',
-      sha224:     'SHA-224',
-      sha256:     'SHA-256',
-      sha384:     'SHA-384',
-      sha512:     'SHA-512',
-      sha512_256: 'SHA-512-256',
-      rmd160:     'RIPEMD-160',
-      whirlpool:  'Whirlpool',
-      md5:        'MD5',
-      md4:        'MD4',
-      gost3411:   'GOST-34.11',
-      adler32:    'Adler32',
-      crc24:      'CRC24',
-      crc32:      'CRC32',
-      sm3:        'SM3'
-    }.each {|method_name, algo|
+      SHA1:       'SHA-1',
+      SHA224:     'SHA-224',
+      SHA256:     'SHA-256',
+      SHA384:     'SHA-384',
+      SHA512:     'SHA-512',
+      SHA512_256: 'SHA-512-256',
+      RMD160:     'RIPEMD-160',
+      WHIRLPOOL:  'Whirlpool',
+      MD5:        'MD5',
+      MD4:        'MD4',
+      GOST3411:   'GOST-34.11',
+      ADLER32:    'Adler32',
+      CRC24:      'CRC24',
+      CRC32:      'CRC32',
+      SM3:        'SM3'
+    }.each {|class_name, algo|
       klass = Class.new(self) {
         define_method(:initialize, ->(data = nil) {super(algo); update(data) if data})
       }
@@ -72,7 +72,7 @@ module Botan
         define_method(:digest){|data| new.digest(data) }
         define_method(:hexdigest){|data| new.hexdigest(data) }
       }
-      const_set(method_name.upcase, klass)
+      const_set(class_name, klass)
     }
 
     # Retrieve the block length for the hash.
