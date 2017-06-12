@@ -37,7 +37,7 @@ module Botan
       #
       # @param rng [Botan::PK::RNG] the RNG to use
       # @return [String] the signature
-      def finish(rng)
+      def finish(rng = Botan::RNG.new)
         Botan.call_ffi_with_buffer(lambda {|b, bl|
           LibBotan.botan_pk_op_sign_finish(@ptr, rng.ptr, b, bl)
         })
