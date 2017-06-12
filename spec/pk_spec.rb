@@ -4,10 +4,6 @@ describe 'PK' do
   context 'rsa generation' do
     let(:priv) { Botan::PK::PrivateKey.generate('RSA', params: '1024', rng: Botan::RNG.new) }
     let(:pub) { priv.public_key }
-    let(:enc) { Botan::PK::Encrypt.new(public_key: pub, padding: 'EME1(SHA-256)') }
-    let(:dec) { Botan::PK::Decrypt.new(private_key: priv, padding: 'EME1(SHA-256)') }
-    let(:sign) { Botan::PK::Sign.new(private_key: priv, padding: 'EMSA4(SHA-384)') }
-    let(:verify) { Botan::PK::Verify.new(public_key: pub, padding: 'EMSA4(SHA-384)') }
     let(:rng) { Botan::RNG.new }
     let(:symkey) { rng.get(32) }
 
@@ -88,23 +84,6 @@ describe 'PK' do
       ctext = pub.encrypt(symkey, rng: rng)
       decrypted = priv.decrypt(ctext)
       expect(decrypted).to eql symkey
-    end
-
-    it 'can sign and verify' do
-      sign << 'mess'
-      sign << 'age'
-      signature = sign.finish(rng)
-
-      verify << 'mes'
-      verify << 'sage'
-      expect(verify.check_signature(signature)).to eql true
-
-      verify << 'mess of things'
-      verify << 'age'
-      expect(verify.check_signature(signature)).to eql false
-
-      verify << 'message'
-      expect(verify.check_signature(signature)).to eql true
     end
 
     it 'can sign and verify (shortcut)' do
