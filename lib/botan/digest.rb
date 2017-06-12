@@ -43,6 +43,10 @@ module Botan
       LibBotan.botan_hash_destroy(ptr)
     end
 
+    def self.digest(name, data)
+      super(data, name)
+    end
+
     {
       sha1:       'SHA-1',
       sha224:     'SHA-224',
