@@ -35,6 +35,10 @@ module Botan
           LibBotan.botan_pk_op_encrypt(@ptr, rng.ptr, b, bl, msg_buf, msg_buf.size)
         })
       end
+
+      def inspect
+        Botan.inspect_ptr(self)
+      end
     end # class
   end # module
 end # module

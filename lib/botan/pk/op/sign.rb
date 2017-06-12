@@ -43,6 +43,10 @@ module Botan
         })
       end
 
+      def inspect
+        Botan.inspect_ptr(self)
+      end
+
       alias << update
     end # class
   end # module

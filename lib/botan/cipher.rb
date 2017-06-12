@@ -162,6 +162,10 @@ module Botan
       _update(data, final: true)
     end
 
+    def inspect
+      Botan.inspect_ptr(self)
+    end
+
     private
 
     def start(nonce)

@@ -132,6 +132,10 @@ module Botan
         verify.check_signature(signature)
       end
 
+      def inspect
+        Botan.inspect_ptr(self)
+      end
+
       private
 
       def export(pem:)

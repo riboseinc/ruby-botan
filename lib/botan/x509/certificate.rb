@@ -119,6 +119,10 @@ module Botan
                                @ptr, usage)
         rc == 0
       end
+
+      def inspect
+        Botan.inspect_ptr(self)
+      end
     end # class
   end # module
 end # module

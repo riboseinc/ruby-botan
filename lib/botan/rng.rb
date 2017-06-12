@@ -45,6 +45,10 @@ module Botan
       Botan.call_ffi(:botan_rng_get, @ptr, out_buf, length)
       out_buf.read_bytes(length)
     end
+
+    def inspect
+      Botan.inspect_ptr(self)
+    end
   end # class
 end # module
 

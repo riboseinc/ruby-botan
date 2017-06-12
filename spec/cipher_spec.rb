@@ -1,6 +1,13 @@
 require 'spec_helper'
 
 describe Botan::Cipher do
+  it 'responds to inspect' do
+    enc = Botan::Cipher.encryption('AES-128/CBC')
+    expect(enc.class.instance_methods(false).include?(:inspect)).to be true
+    expect(enc.inspect.class).to eql String
+    expect(enc.inspect.length).to be >= 1
+  end
+
   context 'AES-128/CTR-BE' do
     let(:enc) { Botan::Cipher.encryption('AES-128/CTR-BE') }
     let(:dec) { Botan::Cipher.decryption('AES-128/CTR-BE') }

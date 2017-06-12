@@ -58,6 +58,13 @@ module Botan
     end
   end
 
+  def self.inspect_ptr(myself)
+    ptr_format = "0x%0#{FFI::Pointer.size*2}x"
+    ptr_s = sprintf(ptr_format, myself.instance_variable_get(:@ptr).address)
+    class_name = myself.class.to_s
+    "#<#{class_name}:#{ptr_s}>"
+  end
+
   # @api private
   # TODO: Upstream this.
   class << FFI::MemoryPointer

@@ -215,6 +215,10 @@ module Botan
         sign.finish(rng)
       end
 
+      def inspect
+        Botan.inspect_ptr(self)
+      end
+
       private
 
       def export(pem:)

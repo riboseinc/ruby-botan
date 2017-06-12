@@ -34,6 +34,10 @@ module Botan
                                              salt_buf, salt_buf.size)
         }, guess: key_length)
       end
+
+      def inspect
+        Botan.inspect_ptr(self)
+      end
     end # class
   end # module
 end # module

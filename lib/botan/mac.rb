@@ -67,6 +67,10 @@ module Botan
       Botan.hex_encode(digest)
     end
 
+    def inspect
+      Botan.inspect_ptr(self)
+    end
+
     alias << update
 
     # TODO: it's not safe to do this at the moment, since these

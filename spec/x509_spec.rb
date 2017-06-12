@@ -5,6 +5,12 @@ describe Botan::X509::Certificate do
   context Botan::X509::Certificate.method(:from_data) do
     let(:cert) { Botan::X509::Certificate.from_data(File.read('spec/data/CSCA.CSCA.csca-germany.1.crt')) }
 
+    it 'responds to inspect' do
+      expect(cert.class.instance_methods(false).include?(:inspect)).to be true
+      expect(cert.inspect.class).to eql String
+      expect(cert.inspect.length).to be >= 1
+    end
+
     it 'has the correct fingerprint' do
       expect(
         cert.fingerprint('SHA-1')
