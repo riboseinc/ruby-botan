@@ -11,9 +11,10 @@ Gem::Specification.new do |spec|
 
   spec.summary       = "The Ruby interface for Botan."
   spec.homepage      = "https://www.ribose.com"
+  spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").grep(%r!^(lib)/!)
-  spec.extra_rdoc_files = %w(README.md)
+  spec.extra_rdoc_files = %w(README.md LICENSE.txt)
   spec.require_paths = ["lib"]
 
   spec.has_rdoc = "yard"

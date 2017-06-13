@@ -1,3 +1,7 @@
+# -*- encoding: utf-8 -*-
+# (c) 2017 Ribose Inc.
+#
+
 require 'botan'
 
 key = Botan::KDF.kdf(algo: 'KDF2(SHA-160)',

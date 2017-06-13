@@ -1,3 +1,7 @@
+# -*- encoding: utf-8 -*-
+# (c) 2017 Ribose Inc.
+#
+
 module Botan
   DEFAULT_KDF_ALGO = 'KDF2(SHA-256)'
   DEFAULT_KDF_SALT_LENGTH = 16

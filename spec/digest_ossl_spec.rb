@@ -1,3 +1,7 @@
+# -*- encoding: utf-8 -*-
+# (c) 2017 Ribose Inc.
+#
+
 require 'spec_helper'
 
 # based on ruby/test/openssl/test_digest.rb
