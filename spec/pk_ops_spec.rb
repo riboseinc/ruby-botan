@@ -11,7 +11,7 @@ describe 'Public Key Operations' do
   let(:signature) { Botan.hex_decode('96a331c528c32890a2bade3d71e0375b8c310588473d82f619c8094fc5b8d84a5532858b1b72e1a8ded03dbc95f6b5ecc7eb6ecb4eeeaef13e9fcbc3f27dc5e93fd322acf688eccc94498698e6f1dd0544d2835ef3bce3b24cb0b6a15eedf7d7009bbeff13010e2b41dd0d0e87111c529ae66df8b3858306928208f480d5e705') }
 
   context Botan::PK::Encrypt do
-    let(:enc) { Botan::PK::Encrypt.new(public_key: key.public_key, padding: 'Raw') }
+    let(:enc) { Botan::PK::Encrypt.new(key: key.public_key, padding: 'Raw') }
 
     it 'responds to inspect' do
       expect(enc.class.instance_methods(false).include?(:inspect)).to be true
@@ -25,7 +25,7 @@ describe 'Public Key Operations' do
   end
 
   context Botan::PK::Decrypt do
-    let(:dec) { Botan::PK::Decrypt.new(private_key: key, padding: 'Raw') }
+    let(:dec) { Botan::PK::Decrypt.new(key: key, padding: 'Raw') }
 
     it 'responds to inspect' do
       expect(dec.class.instance_methods(false).include?(:inspect)).to be true
@@ -39,7 +39,7 @@ describe 'Public Key Operations' do
   end
 
   context Botan::PK::Sign do
-    let(:sign) { Botan::PK::Sign.new(private_key: key, padding: 'Raw') }
+    let(:sign) { Botan::PK::Sign.new(key: key, padding: 'Raw') }
 
     it 'responds to inspect' do
       expect(sign.class.instance_methods(false).include?(:inspect)).to be true
@@ -54,7 +54,7 @@ describe 'Public Key Operations' do
   end
 
   context Botan::PK::Verify do
-    let(:verify) { Botan::PK::Verify.new(public_key: key.public_key, padding: 'Raw') }
+    let(:verify) { Botan::PK::Verify.new(key: key.public_key, padding: 'Raw') }
 
     it 'responds to inspect' do
       expect(verify.class.instance_methods(false).include?(:inspect)).to be true

@@ -7,9 +7,12 @@ module Botan
     # Public Key Key Agreement Operation
     class KeyAgreement
       attr_reader :public_value
-      # @param key [String] the key
+      # @param key [Botan::PK::PrivateKey] the private key
       # @param kdf [String] the KDF algorithm name
       def initialize(key:, kdf: Botan::DEFAULT_KDF_ALGO)
+        if not key.instance_of?(PrivateKey)
+          raise Botan::Error, 'KeyAgreement requires an instance of PrivateKey'
+        end
         ptr = FFI::MemoryPointer.new(:pointer)
         flags = 0
         Botan.call_ffi(:botan_pk_op_key_agreement_create,

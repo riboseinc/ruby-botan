@@ -216,7 +216,7 @@ module Botan
       # @param padding [String] the padding method to use
       # @return [String] the decrypted data
       def decrypt(data, padding: nil)
-        dec = Botan::PK::Decrypt.new(private_key: self, padding: padding)
+        dec = Botan::PK::Decrypt.new(key: self, padding: padding)
         dec.decrypt(data)
       end
 
@@ -227,7 +227,7 @@ module Botan
       # @param rng [Botan::RNG] the RNG to use
       # @return [String] the generated signature
       def sign(data, padding: nil, rng: Botan::RNG.new)
-        sign = Botan::PK::Sign.new(private_key: self, padding: padding)
+        sign = Botan::PK::Sign.new(key: self, padding: padding)
         sign << data
         sign.finish(rng)
       end

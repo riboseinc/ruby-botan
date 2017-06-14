@@ -8,13 +8,16 @@ module Botan
     #
     # See {Botan::PK::PrivateKey#sign} for a simpler interface.
     class Sign
-      # @param private_key [Botan::PK::PrivateKey] the private key
+      # @param key [Botan::PK::PrivateKey] the private key
       # @param padding [String] the padding method name
-      def initialize(private_key:, padding: nil)
-        padding ||= Botan::DEFAULT_EMSA[private_key.public_key.algo]
+      def initialize(key:, padding: nil)
+        padding ||= Botan::DEFAULT_EMSA[key.algo]
+        if not key.instance_of?(PrivateKey)
+          raise Botan::Error, 'Signing requires an instance of PrivateKey'
+        end
         ptr = FFI::MemoryPointer.new(:pointer)
         flags = 0
-        Botan.call_ffi(:botan_pk_op_sign_create, ptr, private_key.ptr, padding, flags)
+        Botan.call_ffi(:botan_pk_op_sign_create, ptr, key.ptr, padding, flags)
         ptr = ptr.read_pointer
         if ptr.null?
           raise Botan::Error, 'botan_pk_op_sign_create returned NULL'

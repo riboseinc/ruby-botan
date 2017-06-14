@@ -8,14 +8,17 @@ module Botan
     #
     # See {Botan::PK::PrivateKey#decrypt} for a simpler interface.
     class Decrypt
-      # @param private_key [Botan::PK::PrivateKey] the private key
+      # @param key [Botan::PK::PrivateKey] the private key
       # @param padding [String] the padding method name
-      def initialize(private_key:, padding: nil)
+      def initialize(key:, padding: nil)
         padding ||= Botan::DEFAULT_EME
+        if not key.instance_of?(PrivateKey)
+          raise Botan::Error, 'Decryption requires an instance of PrivateKey'
+        end
         ptr = FFI::MemoryPointer.new(:pointer)
         flags = 0
         Botan.call_ffi(:botan_pk_op_decrypt_create,
-                       ptr, private_key.ptr, padding, flags)
+                       ptr, key.ptr, padding, flags)
         ptr = ptr.read_pointer
         if ptr.null?
           raise Botan::Error, 'botan_pk_op_decrypt_create returned NULL'

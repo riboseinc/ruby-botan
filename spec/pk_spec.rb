@@ -111,8 +111,8 @@ describe 'PK' do
   context 'ecdsa generation' do
     let(:priv) { Botan::PK::PrivateKey.generate('ECDSA', params: 'secp384r1', rng: Botan::RNG.new) }
     let(:pub) { priv.public_key }
-    let(:sign) { Botan::PK::Sign.new(private_key: priv, padding: 'EMSA1(SHA-384)') }
-    let(:verify) { Botan::PK::Verify.new(public_key: pub, padding: 'EMSA1(SHA-384)') }
+    let(:sign) { Botan::PK::Sign.new(key: priv, padding: 'EMSA1(SHA-384)') }
+    let(:verify) { Botan::PK::Verify.new(key: pub, padding: 'EMSA1(SHA-384)') }
     let(:rng) { Botan::RNG.new }
     let(:symkey) { rng.get(32) }
 

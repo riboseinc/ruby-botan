@@ -8,14 +8,17 @@ module Botan
     #
     # See {Botan::PK::PublicKey#encrypt} for a simpler interface.
     class Encrypt
-      # @param public_key [Botan::PK::PublicKey] the public key
+      # @param key [Botan::PK::PublicKey] the public key
       # @param padding [String] the padding method name
-      def initialize(public_key:, padding: nil)
+      def initialize(key:, padding: nil)
         padding ||= Botan::DEFAULT_EME
+        if not key.instance_of?(PublicKey)
+          raise Botan::Error, 'Encryption requires an instance of PublicKey'
+        end
         ptr = FFI::MemoryPointer.new(:pointer)
         flags = 0
         Botan.call_ffi(:botan_pk_op_encrypt_create,
-                       ptr, public_key.ptr, padding, flags)
+                       ptr, key.ptr, padding, flags)
         ptr = ptr.read_pointer
         if ptr.null?
           raise Botan::Error, 'botan_pk_op_encrypt_create returned NULL'

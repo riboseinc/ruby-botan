@@ -121,7 +121,7 @@ module Botan
       # @param rng [Botan::RNG] the RNG to use
       # @return [String] the encrypted data
       def encrypt(data, padding: nil, rng: Botan::RNG.new)
-        enc = Botan::PK::Encrypt.new(public_key: self, padding: padding)
+        enc = Botan::PK::Encrypt.new(key: self, padding: padding)
         enc.encrypt(data, rng: rng)
       end
 
@@ -131,7 +131,7 @@ module Botan
       # @param padding [String] the padding method
       # @return [Boolean] true if the signature is valid
       def verify(data:, signature:, padding: nil)
-        verify = Botan::PK::Verify.new(public_key: self, padding: padding)
+        verify = Botan::PK::Verify.new(key: self, padding: padding)
         verify << data
         verify.check_signature(signature)
       end
