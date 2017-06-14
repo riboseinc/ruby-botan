@@ -2,10 +2,23 @@
 # (c) 2017 Ribose Inc.
 #
 
+require 'forwardable'
+
 module Botan
   module PK
     # Private Key
     class PrivateKey
+      extend Forwardable
+      delegate [:algo, :encrypt, :estimated_strength, :verify] => :public_key
+      # @!method algo
+      #   @see Botan::PK::PublicKey#algo
+      # @!method encrypt
+      #   @see Botan::PK::PublicKey#encrypt
+      # @!method estimated_strength
+      #   @see Botan::PK::PublicKey#estimated_strength
+      # @!method verify
+      #   @see Botan::PK::PublicKey#verify
+
       # @api private
       attr_reader :ptr
       # @api private

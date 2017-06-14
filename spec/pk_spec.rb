@@ -47,10 +47,12 @@ describe 'PK' do
 
     it 'has a valid estimated strength' do
       expect(pub.estimated_strength).to be >= 1
+      expect(priv.estimated_strength).to eql pub.estimated_strength
     end
 
     it 'has the correct algorithm name' do
       expect(pub.algo).to eql 'RSA'
+      expect(priv.algo).to eql pub.algo
     end
 
     it 'can export the public key' do
@@ -90,10 +92,19 @@ describe 'PK' do
       expect(decrypted).to eql symkey
     end
 
+    it 'can encrypt and decrypt (priv)' do
+      ctext = priv.encrypt(symkey, rng: rng)
+      decrypted = priv.decrypt(ctext)
+      expect(decrypted).to eql symkey
+    end
+
     it 'can sign and verify (shortcut)' do
       signature = priv.sign('message', rng: rng)
       expect(pub.verify(data: 'message', signature: signature)).to eql true
+      expect(priv.verify(data: 'message', signature: signature)).to eql true
+
       expect(pub.verify(data: 'mess', signature: signature)).to eql false
+      expect(priv.verify(data: 'mess', signature: signature)).to eql false
     end
   end
 
@@ -143,10 +154,12 @@ describe 'PK' do
 
     it 'has a valid estimated strength' do
       expect(pub.estimated_strength).to be >= 1
+      expect(priv.estimated_strength).to eql pub.estimated_strength
     end
 
     it 'has the correct algorithm name' do
       expect(pub.algo).to eql 'ECDSA'
+      expect(priv.algo).to eql pub.algo
     end
 
     it 'can export the public key' do
