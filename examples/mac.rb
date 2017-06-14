@@ -1,7 +1,3 @@
-# -*- encoding: utf-8 -*-
-# (c) 2017 Ribose Inc.
-#
-
 require 'botan'
 
 hmac = Botan::MAC.new('HMAC(SHA-256)')
