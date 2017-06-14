@@ -48,7 +48,7 @@ Q8WpvOE='
     end
 
     it 'has the expected algorithm' do
-      expect(cert.subject_public_key.algo_name).to eql 'ECDSA'
+      expect(cert.subject_public_key.algo).to eql 'ECDSA'
     end
 
     it 'has correct subject fields' do
@@ -121,7 +121,7 @@ Q8WpvOE='
     end
 
     it 'has the expected algorithm' do
-      expect(cert.subject_public_key.algo_name).to eql 'ECDSA'
+      expect(cert.subject_public_key.algo).to eql 'ECDSA'
     end
 
     it 'has correct subject fields' do

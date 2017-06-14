@@ -11,7 +11,7 @@ module Botan
       # @param public_key [Botan::PK::PublicKey] the public key
       # @param padding [String] the padding method name
       def initialize(public_key:, padding: nil)
-        padding ||= Botan::DEFAULT_EMSA[public_key.algo_name]
+        padding ||= Botan::DEFAULT_EMSA[public_key.algo]
         ptr = FFI::MemoryPointer.new(:pointer)
         flags = 0
         Botan.call_ffi(:botan_pk_op_verify_create,

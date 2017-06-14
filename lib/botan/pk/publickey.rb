@@ -43,7 +43,7 @@ module Botan
       # Returns the public-key algorithm name.
       #
       # @return [String]
-      def algo_name
+      def algo
         Botan.call_ffi_with_buffer(lambda {|b, bl|
           LibBotan.botan_pubkey_algo_name(@ptr, b, bl)
         }, guess: 32, string: true)

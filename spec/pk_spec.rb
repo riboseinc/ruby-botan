@@ -50,7 +50,7 @@ describe 'PK' do
     end
 
     it 'has the correct algorithm name' do
-      expect(pub.algo_name).to eql 'RSA'
+      expect(pub.algo).to eql 'RSA'
     end
 
     it 'can export the public key' do
@@ -146,7 +146,7 @@ describe 'PK' do
     end
 
     it 'has the correct algorithm name' do
-      expect(pub.algo_name).to eql 'ECDSA'
+      expect(pub.algo).to eql 'ECDSA'
     end
 
     it 'can export the public key' do
