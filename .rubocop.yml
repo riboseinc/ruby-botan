@@ -1,0 +1,51 @@
+---
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  TargetRubyVersion: 2.3
+
+Layout/TrailingBlankLines:
+  EnforcedStyle: final_blank_line
+
+Metrics/MethodLength:
+  Max: 20
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/ParameterLists:
+  CountKeywordArgs: false
+
+##############
+# Exclusions #
+##############
+
+# We're trying to be compatible with OpenSSL::Digest,
+# which has a method named Digest (no snake case).
+Style/MethodName:
+  Exclude:
+    - 'lib/botan/digest.rb'
+
+# We have a numeric literal for the Botan FFI version
+# that is formatted a certain way.
+Style/NumericLiterals:
+  Exclude:
+    - 'lib/botan/ffi/libbotan.rb'
+
+# All the FFI function declarations make for a long module.
+Metrics/ModuleLength:
+  Exclude:
+    - 'lib/botan/ffi/libbotan.rb'
+
+# Exclude rspec describe+context blocks from this rule.
+Metrics/BlockLength:
+  ExcludedMethods:
+    - describe
+    - context
+
+# A lot of our specs have very long hex strings that we don't
+# really want to break up.
+Metrics/LineLength:
+  Exclude:
+    - 'spec/*'
+
