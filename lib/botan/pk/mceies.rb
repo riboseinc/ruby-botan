@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'ffi'
 
@@ -22,7 +22,7 @@ module Botan
                             rng: Botan::RNG.new)
       pt_buf = FFI::MemoryPointer.from_data(plaintext)
       ad_buf = FFI::MemoryPointer.from_data(ad)
-      Botan.call_ffi_with_buffer(lambda {|b,bl|
+      Botan.call_ffi_with_buffer(lambda { |b, bl|
         LibBotan.botan_mceies_encrypt(public_key.ptr,
                                       rng.ptr,
                                       aead,
@@ -46,7 +46,7 @@ module Botan
                             aead: DEFAULT_AEAD)
       ct_buf = FFI::MemoryPointer.from_data(ciphertext)
       ad_buf = FFI::MemoryPointer.from_data(ad)
-      Botan.call_ffi_with_buffer(lambda {|b,bl|
+      Botan.call_ffi_with_buffer(lambda { |b, bl|
         LibBotan.botan_mceies_decrypt(private_key.ptr,
                                       aead,
                                       ct_buf,

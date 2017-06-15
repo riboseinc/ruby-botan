@@ -1,15 +1,14 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'spec_helper'
 
 describe 'hex_encode and hex_decode' do
   let(:hex) { 'aabbccddeeff' }
-  let(:data) { "\xAA\xBB\xCC\xDD\xEE\xFF".force_encoding(Encoding::BINARY) }
+  let(:data) { "\xAA\xBB\xCC\xDD\xEE\xFF".dup.force_encoding(Encoding::BINARY) }
 
   it 'encodes and decodes correctly' do
-
     expect(
       Botan.hex_encode(data)
     ).to eql hex

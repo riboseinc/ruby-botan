@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'ffi'
 
@@ -21,9 +21,7 @@ module Botan
       ptr = FFI::MemoryPointer.new(:pointer)
       Botan.call_ffi(:botan_mac_init, ptr, algo, flags)
       ptr = ptr.read_pointer
-      if ptr.null?
-        raise Botan::Error, 'botan_mac_init returned NULL'
-      end
+      raise Botan::Error, 'botan_mac_init returned NULL' if ptr.null?
       @ptr = FFI::AutoPointer.new(ptr, self.class.method(:destroy))
     end
 
@@ -68,7 +66,7 @@ module Botan
     end
 
     def digest
-      out_buf = FFI::MemoryPointer.new(:uint8, output_length())
+      out_buf = FFI::MemoryPointer.new(:uint8, output_length)
       Botan.call_ffi(:botan_mac_final, @ptr, out_buf)
       out_buf.read_bytes(out_buf.size)
     end
@@ -85,8 +83,8 @@ module Botan
 
     # TODO: it's not safe to do this at the moment, since these
     # methods mutate the state.
-    #alias inspect hexdigest
-    #alias to_s hexdigest
+    # alias inspect hexdigest
+    # alias to_s hexdigest
   end # class
 end # module
 

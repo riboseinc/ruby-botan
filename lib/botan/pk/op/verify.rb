@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'ffi'
 
@@ -19,7 +19,7 @@ module Botan
       # @param padding [String] the padding method name
       def initialize(key:, padding: nil)
         padding ||= Botan::DEFAULT_EMSA[key.algo]
-        if not key.instance_of?(PublicKey)
+        unless key.instance_of?(PublicKey)
           raise Botan::Error, 'Verify requires an instance of PublicKey'
         end
         ptr = FFI::MemoryPointer.new(:pointer)
@@ -56,7 +56,7 @@ module Botan
         sig_buf = FFI::MemoryPointer.from_data(signature)
         rc = Botan.call_ffi_rc(:botan_pk_op_verify_finish,
                                @ptr, sig_buf, sig_buf.size)
-        rc == 0
+        rc.zero?
       end
 
       def inspect

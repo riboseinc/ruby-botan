@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'ffi'
 
@@ -18,9 +18,7 @@ module Botan
   # @return [Integer] the return code
   def self.call_ffi_rc(fn, *args)
     rc = LibBotan.method(fn).call(*args)
-    if rc < 0
-      raise Botan::Error, "FFI call to #{fn.to_s} failed (rc: #{rc})"
-    end
+    raise Botan::Error, "FFI call to #{fn} failed (rc: #{rc})" if rc.negative?
     rc
   end
 
@@ -56,11 +54,11 @@ module Botan
     buf_len = buf_len_ptr.read(:size_t)
     # Call should only fail if buffer was inadequate, and should
     # only succeed if buffer was adequate.
-    if (rc < 0 && buf_len <= buf.size) || (rc >=0 && buf_len > buf.size)
+    if (rc.negative? && buf_len <= buf.size) || (rc >= 0 && buf_len > buf.size)
       raise Botan::Error, 'FFI call unexpectedly failed'
     end
 
-    if rc < 0
+    if rc.negative?
       return call_ffi_with_buffer(fn, guess: buf_len, string: string)
     else
       string ? buf.read_string : buf.read_bytes(buf_len)
@@ -68,21 +66,23 @@ module Botan
   end
 
   def self.inspect_ptr(myself)
-    ptr_format = "0x%0#{FFI::Pointer.size*2}x"
-    ptr_s = sprintf(ptr_format, myself.instance_variable_get(:@ptr).address)
+    ptr_format = "0x%0#{FFI::Pointer.size * 2}x"
+    ptr_s = format(ptr_format, myself.instance_variable_get(:@ptr).address)
     class_name = myself.class.to_s
     "#<#{class_name}:#{ptr_s}>"
   end
 
   # @api private
   # TODO: Upstream this.
-  class << FFI::MemoryPointer
-    def from_data(data)
-      buf = FFI::MemoryPointer.new(:uint8, data.bytesize)
-      buf.write_bytes(data)
-      buf
+  unless FFI::MemoryPointer.respond_to?(:from_data)
+    class << FFI::MemoryPointer
+      def from_data(data)
+        buf = FFI::MemoryPointer.new(:uint8, data.bytesize)
+        buf.write_bytes(data)
+        buf
+      end
     end
-  end if not FFI::MemoryPointer.respond_to?(:from_data)
+  end
 
   # Encodes the provided data as a hexadecimal string.
   #

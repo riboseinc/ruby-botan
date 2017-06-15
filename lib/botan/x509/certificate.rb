@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'date'
 require 'ffi'
@@ -38,7 +38,7 @@ module Botan
       end
 
       def time_starts
-        time = Botan.call_ffi_with_buffer(lambda {|b,bl|
+        time = Botan.call_ffi_with_buffer(lambda { |b, bl|
           LibBotan.botan_x509_cert_get_time_starts(@ptr, b, bl)
         }, guess: 16, string: true)
         case time.size
@@ -52,7 +52,7 @@ module Botan
       end
 
       def time_expires
-        time = Botan.call_ffi_with_buffer(lambda {|b,bl|
+        time = Botan.call_ffi_with_buffer(lambda { |b, bl|
           LibBotan.botan_x509_cert_get_time_expires(@ptr, b, bl)
         }, guess: 16, string: true)
         case time.size
@@ -66,38 +66,38 @@ module Botan
       end
 
       def to_s
-        Botan.call_ffi_with_buffer(lambda {|b,bl|
+        Botan.call_ffi_with_buffer(lambda { |b, bl|
           LibBotan.botan_x509_cert_to_string(@ptr, b, bl)
         }, string: true)
       end
 
-      def fingerprint(hash_algo='SHA-256')
+      def fingerprint(hash_algo = 'SHA-256')
         n = Botan::Digest.new(hash_algo).length * 3
-        Botan.call_ffi_with_buffer(lambda {|b,bl|
+        Botan.call_ffi_with_buffer(lambda { |b, bl|
           LibBotan.botan_x509_cert_get_fingerprint(@ptr, hash_algo, b, bl)
         }, guess: n, string: true)
       end
 
       def serial_number
-        Botan.call_ffi_with_buffer(lambda {|b,bl|
+        Botan.call_ffi_with_buffer(lambda { |b, bl|
           LibBotan.botan_x509_cert_get_serial_number(@ptr, b, bl)
         })
       end
 
       def authority_key_id
-        Botan.call_ffi_with_buffer(lambda {|b,bl|
+        Botan.call_ffi_with_buffer(lambda { |b, bl|
           LibBotan.botan_x509_cert_get_authority_key_id(@ptr, b, bl)
         })
       end
 
       def subject_key_id
-        Botan.call_ffi_with_buffer(lambda {|b,bl|
+        Botan.call_ffi_with_buffer(lambda { |b, bl|
           LibBotan.botan_x509_cert_get_subject_key_id(@ptr, b, bl)
         })
       end
 
       def subject_public_key_bits
-        Botan.call_ffi_with_buffer(lambda {|b,bl|
+        Botan.call_ffi_with_buffer(lambda { |b, bl|
           LibBotan.botan_x509_cert_get_public_key_bits(@ptr, b, bl)
         })
       end
@@ -112,14 +112,14 @@ module Botan
         Botan::PK::PublicKey.new(pub)
       end
 
-      def issuer_info(key, index=0)
-        Botan.call_ffi_with_buffer(lambda {|b,bl|
+      def issuer_info(key, index = 0)
+        Botan.call_ffi_with_buffer(lambda { |b, bl|
           LibBotan.botan_x509_cert_get_issuer_dn(@ptr, key, index, b, bl)
         }, string: true)
       end
 
-      def subject_info(key, index=0)
-        Botan.call_ffi_with_buffer(lambda {|b,bl|
+      def subject_info(key, index = 0)
+        Botan.call_ffi_with_buffer(lambda { |b, bl|
           LibBotan.botan_x509_cert_get_subject_dn(@ptr, key, index, b, bl)
         }, string: true)
       end
@@ -127,7 +127,7 @@ module Botan
       def allowed_usage?(usage)
         rc = Botan.call_ffi_rc(:botan_x509_cert_allowed_usage,
                                @ptr, usage)
-        rc == 0
+        rc.zero?
       end
 
       def inspect

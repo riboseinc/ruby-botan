@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'ffi'
 
@@ -14,13 +14,11 @@ module Botan
     # @api private
     attr_reader :ptr
     # @param rng_type [String] the type of RNG to create
-    def initialize(rng_type=nil)
+    def initialize(rng_type = nil)
       ptr = FFI::MemoryPointer.new(:pointer)
       Botan.call_ffi(:botan_rng_init, ptr, rng_type)
       ptr = ptr.read_pointer
-      if ptr.null?
-        raise Botan::Error, 'botan_rng_init returned NULL'
-      end
+      raise Botan::Error, 'botan_rng_init returned NULL' if ptr.null?
       @ptr = FFI::AutoPointer.new(ptr, self.class.method(:destroy))
     end
 
@@ -41,7 +39,7 @@ module Botan
     #
     # @param bits [Integer] the number of bits to reseed with
     # @return [self]
-    def reseed(bits=256)
+    def reseed(bits = 256)
       Botan.call_ffi(:botan_rng_reseed, @ptr, bits)
       self
     end

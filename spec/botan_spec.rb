@@ -1,12 +1,12 @@
-# -*- encoding: utf-8 -*-
-# (c) 2017 Ribose Inc.
-#
+# frozen_string_literal: true
 
-require "spec_helper"
+# (c) 2017 Ribose Inc.
+
+require 'spec_helper'
 
 describe Botan do
-  it "has a version number" do
+  it 'has a version number' do
     expect(Botan::VERSION).not_to be nil
   end
-
 end
+

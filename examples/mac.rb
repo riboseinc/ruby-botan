@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'botan'
 
 hmac = Botan::MAC.new('HMAC(SHA-256)')

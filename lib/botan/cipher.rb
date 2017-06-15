@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'ffi'
 
@@ -26,9 +26,7 @@ module Botan
       ptr = FFI::MemoryPointer.new(:pointer)
       Botan.call_ffi(:botan_cipher_init, ptr, algo, flags)
       ptr = ptr.read_pointer
-      if ptr.null?
-        raise Botan::Error, 'botan_cipher_init returned NULL'
-      end
+      raise Botan::Error, 'botan_cipher_init returned NULL' if ptr.null?
       @ptr = FFI::AutoPointer.new(ptr, self.class.method(:destroy))
     end
 
@@ -98,7 +96,7 @@ module Botan
     #
     # @return [Boolean] true if this is an AEAD mode
     def authenticated?
-      tag_length > 0
+      tag_length.positive?
     end
 
     # Checks whether a nonce length is valid for this cipher.
@@ -168,7 +166,7 @@ module Botan
     #
     # @param data [String] the data, if any
     # @return [String] the ciphertext or plaintext
-    def finish(data=nil)
+    def finish(data = nil)
       _update(data, final: true)
     end
 
@@ -187,14 +185,14 @@ module Botan
       kmin_ptr = FFI::MemoryPointer.new(:size_t)
       kmax_ptr = FFI::MemoryPointer.new(:size_t)
       Botan.call_ffi(:botan_cipher_query_keylen, @ptr, kmin_ptr, kmax_ptr)
-      return [kmin_ptr.read(:size_t), kmax_ptr.read(:size_t)]
+      [kmin_ptr.read(:size_t), kmax_ptr.read(:size_t)]
     end
 
     def _update(data, final:)
       inp = data ? data : ''
       flags = final ? 1 : 0
       out_buf_size = inp.bytesize + (final ? tag_length : 0)
-      # FIXME botan currently lacks a way of determining the size required
+      # FIXME: botan currently lacks a way of determining the size required
       # here, taking in to account padding mechanism, etc.
       out_buf_size += 128
       out_buf = FFI::MemoryPointer.new(:uint8, out_buf_size)
@@ -202,11 +200,12 @@ module Botan
       input_buf = FFI::MemoryPointer.from_data(inp)
       inp_consumed_ptr = FFI::MemoryPointer.new(:size_t)
       Botan.call_ffi(:botan_cipher_update, @ptr, flags, out_buf, out_buf.size,
-                           out_written_ptr, input_buf, input_buf.size,
-                           inp_consumed_ptr)
+                     out_written_ptr, input_buf, input_buf.size,
+                     inp_consumed_ptr)
       consumed = inp_consumed_ptr.read(:size_t)
       if consumed != inp.bytesize
-        raise Botan::Error, "botan_cipher_update did not consume all input (#{consumed} out of #{inp.bytesize} bytes)"
+        raise Botan::Error, 'botan_cipher_update did not consume all input' \
+                            " (#{consumed} out of #{inp.bytesize} bytes)"
       end
       out_buf.read_bytes(out_written_ptr.read(:size_t))
     end

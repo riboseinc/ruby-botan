@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'spec_helper'
 
@@ -22,26 +22,26 @@ describe Botan::Cipher do
     let(:plaintext) { Botan::RNG.new.get(21) }
 
     it 'has expected default nonce length' do
-      expect(enc.default_nonce_length).to eql 0
+      expect(enc.default_nonce_length).to be 0
     end
 
     it 'does validate nonce lengths' do
-      expect(enc.valid_nonce_length?(enc.default_nonce_length)).to eql true
+      expect(enc.valid_nonce_length?(enc.default_nonce_length)).to be true
     end
 
     it 'has expected key lengths' do
-      expect(kmin).to eql 16
-      expect(kmax).to eql 16
+      expect(kmin).to be 16
+      expect(kmax).to be 16
     end
 
     it 'has expected update granularity' do
-      expect(enc.update_granularity).to eql 1
+      expect(enc.update_granularity).to be 1
     end
 
     it 'encrypts and decrypts successfully' do
       enc.key = key
       enc.iv = iv
-      expect(enc.update('').bytesize).to eql 0
+      expect(enc.update('').bytesize).to be 0
       ciphertext = enc.finish(plaintext)
 
       dec.key = key
@@ -94,20 +94,20 @@ describe Botan::Cipher do
     let(:plaintext) { Botan.hex_decode('0397f4f6820b1f9386f14403be5ac16e50213bd473b4874b9bcbf5f318ee686b1d') }
 
     it 'has expected default nonce length' do
-      expect(enc.default_nonce_length).to eql 16
+      expect(enc.default_nonce_length).to be 16
     end
 
     it 'does validate nonce lengths' do
-      expect(enc.valid_nonce_length?(enc.default_nonce_length)).to eql true
+      expect(enc.valid_nonce_length?(enc.default_nonce_length)).to be true
     end
 
     it 'has expected key lengths' do
-      expect(enc.key_length_min).to eql 16
-      expect(enc.key_length_max).to eql 16
+      expect(enc.key_length_min).to be 16
+      expect(enc.key_length_max).to be 16
     end
 
     it 'has expected update granularity' do
-      expect(enc.update_granularity).to eql 64
+      expect(enc.update_granularity).to be 64
     end
 
     it 'encrypts and decrypts successfully' do
@@ -127,14 +127,14 @@ describe Botan::Cipher do
   context 'AES-128/GCM' do
     let(:enc) { Botan::Cipher.encryption('AES-128/GCM') }
     let(:dec) { Botan::Cipher.decryption('AES-128/GCM') }
-    let(:key) { Botan::hex_decode('FEFFE9928665731C6D6A8F9467308308') }
-    let(:nonce) { Botan::hex_decode('CAFEBABEFACEDBADDECAF888') }
-    let(:input) { Botan::hex_decode('D9313225F88406E5A55909C5AFF5269A86A7A9531534F7DA2E4C303D8A318A721C3C0C95956809532FCF0E2449A6B525B16AEDF5AA0DE657BA637B39') }
-    let(:ad) { Botan::hex_decode('FEEDFACEDEADBEEFFEEDFACEDEADBEEFABADDAD2') }
-    let(:output) { Botan::hex_decode('42831EC2217774244B7221B784D0D49CE3AA212F2C02A4E035C17E2329ACA12E21D514B25466931C7D8F6A5AAC84AA051BA30B396A0AAC973D58E0915BC94FBC3221A5DB94FAE95AE7121A47') }
+    let(:key) { Botan.hex_decode('FEFFE9928665731C6D6A8F9467308308') }
+    let(:nonce) { Botan.hex_decode('CAFEBABEFACEDBADDECAF888') }
+    let(:input) { Botan.hex_decode('D9313225F88406E5A55909C5AFF5269A86A7A9531534F7DA2E4C303D8A318A721C3C0C95956809532FCF0E2449A6B525B16AEDF5AA0DE657BA637B39') }
+    let(:ad) { Botan.hex_decode('FEEDFACEDEADBEEFFEEDFACEDEADBEEFABADDAD2') }
+    let(:output) { Botan.hex_decode('42831EC2217774244B7221B784D0D49CE3AA212F2C02A4E035C17E2329ACA12E21D514B25466931C7D8F6A5AAC84AA051BA30B396A0AAC973D58E0915BC94FBC3221A5DB94FAE95AE7121A47') }
 
-    it { expect(enc.authenticated?).to eql true }
-    it { expect(dec.authenticated?).to eql true }
+    it { expect(enc.authenticated?).to be true }
+    it { expect(dec.authenticated?).to be true }
 
     it 'encrypts correctly' do
       enc.key = key

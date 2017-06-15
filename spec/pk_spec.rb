@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'spec_helper'
 
@@ -12,16 +12,16 @@ describe 'PK' do
     let(:symkey) { rng.get(32) }
 
     it 'passes basic checks' do
-      expect(pub.valid?).to eql true
-      expect(pub.valid?(rng)).to eql true
+      expect(pub.valid?).to be true
+      expect(pub.valid?(rng)).to be true
 
-      expect(priv.valid?).to eql true
-      expect(priv.valid?(rng)).to eql true
+      expect(priv.valid?).to be true
+      expect(priv.valid?(rng)).to be true
     end
 
     it 'returns valid fields' do
       expect(pub.get_field('n')).to be >= 1
-      expect(pub.get_field('e')).to eql 65537
+      expect(pub.get_field('e')).to be 0x10001
 
       expect(priv.get_field('p')).to be >= 1
       expect(priv.get_field('q')).to be >= 1
@@ -32,17 +32,17 @@ describe 'PK' do
     end
 
     it 'raises an error when requesting invalid fields' do
-      expect {
+      expect do
         pub.get_field('z')
-      }.to raise_error Botan::Error
+      end.to raise_error Botan::Error
 
-      expect {
+      expect do
         priv.get_field('z')
-      }.to raise_error Botan::Error
+      end.to raise_error Botan::Error
     end
 
     it 'has a valid fingerprint length' do
-      expect(pub.fingerprint('SHA-256').length).to eql 32
+      expect(pub.fingerprint('SHA-256').length).to be 32
     end
 
     it 'has a valid estimated strength' do
@@ -100,11 +100,11 @@ describe 'PK' do
 
     it 'can sign and verify (shortcut)' do
       signature = priv.sign('message', rng: rng)
-      expect(pub.verify(data: 'message', signature: signature)).to eql true
-      expect(priv.verify(data: 'message', signature: signature)).to eql true
+      expect(pub.verify(data: 'message', signature: signature)).to be true
+      expect(priv.verify(data: 'message', signature: signature)).to be true
 
-      expect(pub.verify(data: 'mess', signature: signature)).to eql false
-      expect(priv.verify(data: 'mess', signature: signature)).to eql false
+      expect(pub.verify(data: 'mess', signature: signature)).to be false
+      expect(priv.verify(data: 'mess', signature: signature)).to be false
     end
   end
 
@@ -117,11 +117,11 @@ describe 'PK' do
     let(:symkey) { rng.get(32) }
 
     it 'passes basic checks' do
-      expect(pub.valid?).to eql true
-      expect(pub.valid?(rng)).to eql true
+      expect(pub.valid?).to be true
+      expect(pub.valid?(rng)).to be true
 
-      expect(priv.valid?).to eql true
-      expect(priv.valid?(rng)).to eql true
+      expect(priv.valid?).to be true
+      expect(priv.valid?(rng)).to be true
     end
 
     it 'returns valid fields' do
@@ -139,17 +139,17 @@ describe 'PK' do
     end
 
     it 'raises an error when requesting invalid fields' do
-      expect {
+      expect do
         pub.get_field('z')
-      }.to raise_error Botan::Error
+      end.to raise_error Botan::Error
 
-      expect {
+      expect do
         priv.get_field('z')
-      }.to raise_error Botan::Error
+      end.to raise_error Botan::Error
     end
 
     it 'has a valid fingerprint length' do
-      expect(pub.fingerprint('SHA-256').length).to eql 32
+      expect(pub.fingerprint('SHA-256').length).to be 32
     end
 
     it 'has a valid estimated strength' do
@@ -179,20 +179,20 @@ describe 'PK' do
 
       verify << 'mes'
       verify << 'sage'
-      expect(verify.check_signature(signature)).to eql true
+      expect(verify.check_signature(signature)).to be true
 
       verify << 'mess of things'
       verify << 'age'
-      expect(verify.check_signature(signature)).to eql false
+      expect(verify.check_signature(signature)).to be false
 
       verify << 'message'
-      expect(verify.check_signature(signature)).to eql true
+      expect(verify.check_signature(signature)).to be true
     end
 
     it 'can sign and verify (shortcut)' do
       signature = priv.sign('message', rng: rng)
-      expect(pub.verify(data: 'message', signature: signature)).to eql true
-      expect(pub.verify(data: 'mess', signature: signature)).to eql false
+      expect(pub.verify(data: 'message', signature: signature)).to be true
+      expect(pub.verify(data: 'mess', signature: signature)).to be false
     end
   end
 
@@ -223,9 +223,9 @@ describe 'PK' do
 
   context Botan::PK::PrivateKey.method(:generate) do
     it 'errors on invalid algorithm' do
-      expect {
+      expect do
         Botan::PK::PrivateKey.generate('fake')
-      }.to raise_error Botan::Error
+      end.to raise_error Botan::Error
     end
   end
 end

@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'digest'
 require 'ffi'
@@ -33,9 +33,7 @@ module Botan
       ptr = FFI::MemoryPointer.new(:pointer)
       Botan.call_ffi(:botan_hash_init, ptr, algo, flags)
       ptr = ptr.read_pointer
-      if ptr.null?
-        raise Botan::Error, 'botan_hash_init returned NULL'
-      end
+      raise Botan::Error, 'botan_hash_init returned NULL' if ptr.null?
       @ptr = FFI::AutoPointer.new(ptr, self.class.method(:destroy))
     end
 
@@ -72,17 +70,20 @@ module Botan
       CRC24:      'CRC24',
       CRC32:      'CRC32',
       SM3:        'SM3'
-    }.each {|class_name, algo|
-      klass = Class.new(self) {
-        define_method(:initialize, ->(data = nil) {super(algo); update(data) if data})
-      }
+    }.each do |class_name, algo|
+      klass = Class.new(self) do
+        define_method(:initialize, lambda do |data = nil|
+          super(algo)
+          update(data) if data
+        end)
+      end
       singleton = (class << klass; self; end)
-      singleton.class_eval{
-        define_method(:digest){|data| new.digest(data) }
-        define_method(:hexdigest){|data| new.hexdigest(data) }
-      }
+      singleton.class_eval do
+        define_method(:digest) { |data| new.digest(data) }
+        define_method(:hexdigest) { |data| new.hexdigest(data) }
+      end
       const_set(class_name, klass)
-    }
+    end
 
     # Retrieve the block length for the hash.
     #

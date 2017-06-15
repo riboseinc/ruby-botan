@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'ffi'
 
@@ -78,8 +78,8 @@ module Botan
                      algo, out_buf, key_length,
                      password, salt_buf, salt_buf.size,
                      milliseconds, iterations_ptr)
-      return {iterations: iterations_ptr.read(:size_t),
-              key: out_buf.read_bytes(key_length)}
+      { iterations: iterations_ptr.read(:size_t),
+        key: out_buf.read_bytes(key_length) }
     end
   end # module
 end # module

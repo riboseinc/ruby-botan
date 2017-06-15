@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'botan'
 
 md5 = Botan::Digest::MD5.new

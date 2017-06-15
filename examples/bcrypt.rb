@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'botan'
 
 print 'Enter a new password: '

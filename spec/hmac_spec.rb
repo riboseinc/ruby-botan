@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'spec_helper'
 
@@ -16,7 +16,7 @@ describe Botan::MAC do
   end
 
   it 'has the correct output length' do
-    expect(hmac.output_length).to eql 32
+    expect(hmac.output_length).to be 32
   end
 
   it 'produces the expected hash' do

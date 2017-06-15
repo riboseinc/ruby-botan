@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'ffi'
 
@@ -19,16 +19,14 @@ module Botan
       # @param padding [String] the padding method name
       def initialize(key:, padding: nil)
         padding ||= Botan::DEFAULT_EMSA[key.algo]
-        if not key.instance_of?(PrivateKey)
+        unless key.instance_of?(PrivateKey)
           raise Botan::Error, 'Signing requires an instance of PrivateKey'
         end
         ptr = FFI::MemoryPointer.new(:pointer)
         flags = 0
         Botan.call_ffi(:botan_pk_op_sign_create, ptr, key.ptr, padding, flags)
         ptr = ptr.read_pointer
-        if ptr.null?
-          raise Botan::Error, 'botan_pk_op_sign_create returned NULL'
-        end
+        raise Botan::Error, 'botan_pk_op_sign_create returned NULL' if ptr.null?
         @ptr = FFI::AutoPointer.new(ptr, self.class.method(:destroy))
       end
 
@@ -52,7 +50,7 @@ module Botan
       # @param rng [Botan::PK::RNG] the RNG to use
       # @return [String] the signature
       def finish(rng = Botan::RNG.new)
-        Botan.call_ffi_with_buffer(lambda {|b, bl|
+        Botan.call_ffi_with_buffer(lambda { |b, bl|
           LibBotan.botan_pk_op_sign_finish(@ptr, rng.ptr, b, bl)
         })
       end

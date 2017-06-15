@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'spec_helper'
 
@@ -22,9 +22,9 @@ describe 'PK loading' do
     it 'can be exported (encrypted) and loaded again' do
       exported = key.export_encrypted_pem(password: 'right')
 
-      expect {
+      expect do
         Botan::PK::PrivateKey.from_data(exported, password: 'wrong')
-      }.to raise_error Botan::Error
+      end.to raise_error Botan::Error
 
       reloaded = Botan::PK::PrivateKey.from_data(exported, password: 'right')
       expect(reloaded.export_pem.length).to be >= 1
@@ -40,7 +40,6 @@ describe 'PK loading' do
       expect(key.inspect.class).to eql String
       expect(key.inspect.length).to be >= 1
     end
-
 
     it 'exports correctly' do
       expect(key.export_pem).to eql public_key_pem

@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'simplecov'
 SimpleCov.start
@@ -10,5 +10,6 @@ if ENV['CI'] == 'true'
   SimpleCov.formatter = SimpleCov::Formatter::Codecov
 end
 
-$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
-require "botan"
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+require 'botan'
+

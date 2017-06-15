@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'spec_helper'
 
@@ -9,7 +9,7 @@ describe Botan::Digest do
     let(:md5) { Botan::Digest.new('MD5') }
 
     it 'has the correct block length' do
-      expect(md5.block_length).to eql 64
+      expect(md5.block_length).to be 64
     end
 
     it 'produces the correct hash' do
@@ -22,7 +22,7 @@ describe Botan::Digest do
     let(:sm3) { Botan::Digest.new('SM3') }
 
     it 'has the correct block length' do
-      expect(sm3.block_length).to eql 64
+      expect(sm3.block_length).to be 64
     end
 
     it 'produces the correct hash' do

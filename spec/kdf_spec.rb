@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'spec_helper'
 
@@ -17,13 +17,13 @@ describe Botan::KDF.method(:kdf) do
 end
 
 describe Botan::KDF.method(:pbkdf) do
-  let(:result) {
-      Botan::KDF.pbkdf(algo: 'PBKDF2(SHA-1)',
-                       password: '',
-                       key_length: 32,
-                       iterations: 10000,
-                       salt: Botan.hex_decode('0001020304050607'))
-  }
+  let(:result) do
+    Botan::KDF.pbkdf(algo: 'PBKDF2(SHA-1)',
+                     password: '',
+                     key_length: 32,
+                     iterations: 10_000,
+                     salt: Botan.hex_decode('0001020304050607'))
+  end
 
   it 'produces the expected output' do
     expect(result).to eql Botan.hex_decode('59B2B1143B4CB1059EC58D9722FB1C72471E0D85C6F7543BA5228526375B0127')
@@ -32,13 +32,13 @@ end
 
 describe Botan::KDF.method(:pbkdf_timed) do
   let(:salt) { Botan::RNG.get(Botan::DEFAULT_KDF_SALT_LENGTH) }
-  let(:result) {
-      Botan::KDF.pbkdf_timed(algo: 'PBKDF2(SHA-256)',
-                             password: 'xyz',
-                             salt: salt,
-                             key_length: 32,
-                             milliseconds: 200)
-  }
+  let(:result) do
+    Botan::KDF.pbkdf_timed(algo: 'PBKDF2(SHA-256)',
+                           password: 'xyz',
+                           salt: salt,
+                           key_length: 32,
+                           milliseconds: 200)
+  end
   let(:iterations) { result[:iterations] }
   let(:key) { result[:key] }
 
@@ -47,16 +47,16 @@ describe Botan::KDF.method(:pbkdf_timed) do
   end
 
   it 'produces an output of the correct size' do
-    expect(key.bytesize).to eql 32
+    expect(key.bytesize).to be 32
   end
 
   it 'produces the same output with the same inputs (timed and non-timed)' do
     expect(
       Botan::KDF.pbkdf(algo: 'PBKDF2(SHA-256)',
-                  password: 'xyz',
-                  key_length: 32,
-                  iterations: iterations,
-                  salt: salt)
+                       password: 'xyz',
+                       key_length: 32,
+                       iterations: iterations,
+                       salt: salt)
     ).to eql key
   end
 end

@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'ffi'
 
@@ -42,7 +42,7 @@ module Botan
     # @return [Boolean] true if the provided password is correct
     def self.valid?(password:, phash:)
       rc = Botan.call_ffi_rc(:botan_bcrypt_is_valid, password, phash)
-      return rc == 0
+      rc.zero?
     end
   end # module
 end # module

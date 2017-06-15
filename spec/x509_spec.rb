@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'spec_helper'
 require 'base64'
@@ -73,15 +73,15 @@ Q8WpvOE='
     end
 
     it 'has correct allowed usages' do
-      expect(cert.allowed_usage?(Botan::X509::Constraints::DIGITAL_SIGNATURE)).to eql false
-      expect(cert.allowed_usage?(Botan::X509::Constraints::NON_REPUDIATION)).to eql false
-      expect(cert.allowed_usage?(Botan::X509::Constraints::KEY_ENCIPHERMENT)).to eql false
-      expect(cert.allowed_usage?(Botan::X509::Constraints::DATA_ENCIPHERMENT)).to eql false
-      expect(cert.allowed_usage?(Botan::X509::Constraints::KEY_AGREEMENT)).to eql false
-      expect(cert.allowed_usage?(Botan::X509::Constraints::KEY_CERT_SIGN)).to eql true
-      expect(cert.allowed_usage?(Botan::X509::Constraints::CRL_SIGN)).to eql true
-      expect(cert.allowed_usage?(Botan::X509::Constraints::ENCIPHER_ONLY)).to eql false
-      expect(cert.allowed_usage?(Botan::X509::Constraints::DECIPHER_ONLY)).to eql false
+      expect(cert.allowed_usage?(Botan::X509::Constraints::DIGITAL_SIGNATURE)).to be false
+      expect(cert.allowed_usage?(Botan::X509::Constraints::NON_REPUDIATION)).to be false
+      expect(cert.allowed_usage?(Botan::X509::Constraints::KEY_ENCIPHERMENT)).to be false
+      expect(cert.allowed_usage?(Botan::X509::Constraints::DATA_ENCIPHERMENT)).to be false
+      expect(cert.allowed_usage?(Botan::X509::Constraints::KEY_AGREEMENT)).to be false
+      expect(cert.allowed_usage?(Botan::X509::Constraints::KEY_CERT_SIGN)).to be true
+      expect(cert.allowed_usage?(Botan::X509::Constraints::CRL_SIGN)).to be true
+      expect(cert.allowed_usage?(Botan::X509::Constraints::ENCIPHER_ONLY)).to be false
+      expect(cert.allowed_usage?(Botan::X509::Constraints::DECIPHER_ONLY)).to be false
     end
   end
 

@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'ffi'
 
@@ -19,7 +19,7 @@ module Botan
       # @param padding [String] the padding method name
       def initialize(key:, padding: nil)
         padding ||= Botan::DEFAULT_EME
-        if not key.instance_of?(PublicKey)
+        unless key.instance_of?(PublicKey)
           raise Botan::Error, 'Encryption requires an instance of PublicKey'
         end
         ptr = FFI::MemoryPointer.new(:pointer)
@@ -45,8 +45,9 @@ module Botan
       # @return [String] the encrypted data
       def encrypt(msg, rng: Botan::RNG.new)
         msg_buf = FFI::MemoryPointer.from_data(msg)
-        Botan.call_ffi_with_buffer(lambda {|b, bl|
-          LibBotan.botan_pk_op_encrypt(@ptr, rng.ptr, b, bl, msg_buf, msg_buf.size)
+        Botan.call_ffi_with_buffer(lambda { |b, bl|
+          LibBotan.botan_pk_op_encrypt(@ptr, rng.ptr, b, bl,
+                                       msg_buf, msg_buf.size)
         })
       end
 

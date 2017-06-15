@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'ffi'
 require 'forwardable'
@@ -15,7 +15,7 @@ module Botan
     # Private Key
     class PrivateKey
       extend Forwardable
-      delegate [:algo, :encrypt, :estimated_strength, :verify] => :public_key
+      delegate %i[algo encrypt estimated_strength verify] => :public_key
       # @!method algo
       #   @see Botan::PK::PublicKey#algo
       # @!method encrypt
@@ -31,11 +31,9 @@ module Botan
       #
       # See {generate} and {from_data} instead.
       def initialize(ptr)
-        if ptr.null?
-          raise Botan::Error, 'PrivateKey received a NULL pointer'
-        end
+        raise Botan::Error, 'PrivateKey received a NULL pointer' if ptr.null?
         @ptr = FFI::AutoPointer.new(ptr, self.class.method(:destroy))
-       end
+      end
 
       # @api private
       def self.destroy(ptr)
@@ -52,9 +50,7 @@ module Botan
         ptr = FFI::MemoryPointer.new(:pointer)
         Botan.call_ffi(:botan_privkey_create, ptr, algo, params, rng.ptr)
         ptr = ptr.read_pointer
-        if ptr.null?
-          raise Botan::Error, "botan_privkey_create failed"
-        end
+        raise Botan::Error, 'botan_privkey_create failed' if ptr.null?
         PrivateKey.new(ptr)
       end
 
@@ -65,7 +61,8 @@ module Botan
       def self.from_data(data, password: nil, rng: Botan::RNG.new)
         ptr = FFI::MemoryPointer.new(:pointer)
         buf = FFI::MemoryPointer.from_data(data)
-        Botan.call_ffi(:botan_privkey_load, ptr, rng.ptr, buf, buf.size, password)
+        Botan.call_ffi(:botan_privkey_load, ptr, rng.ptr,
+                       buf, buf.size, password)
         PrivateKey.new(ptr.read_pointer)
       end
 
@@ -188,11 +185,11 @@ module Botan
       # @param thorough [Boolean] whether to perform more thorough checks
       #   that may be slower
       # @return [Boolean] true if the key appears to be valid
-      def valid?(rng=nil, thorough=false)
+      def valid?(rng = nil, thorough = false)
         rng ||= Botan::RNG.new
         flags = thorough ? 1 : 0
         rc = LibBotan.botan_privkey_check_key(@ptr, rng.ptr, flags)
-        rc == 0
+        rc.zero?
       end
 
       # Retrieves a field of key material.
@@ -208,12 +205,12 @@ module Botan
         Botan.call_ffi(:botan_mp_init, mp_ptr)
         mp = mp_ptr.read_pointer
         Botan.call_ffi(:botan_privkey_get_field, mp, @ptr, field)
-        hex_str = Botan.call_ffi_with_buffer(lambda {|b,bl|
+        hex_str = Botan.call_ffi_with_buffer(lambda { |b, bl|
           LibBotan.botan_mp_to_str(mp, 16, b, bl)
         }, string: true)
         hex_str.hex
       ensure
-        LibBotan.botan_mp_destroy(mp) if mp and not mp.null?
+        LibBotan.botan_mp_destroy(mp) if mp && !mp.null?
       end
 
       # Decrypts data using the key.
@@ -246,7 +243,7 @@ module Botan
 
       def export(pem:)
         flags = pem ? 1 : 0
-        Botan.call_ffi_with_buffer(lambda {|b, bl|
+        Botan.call_ffi_with_buffer(lambda { |b, bl|
           LibBotan.botan_privkey_export(@ptr, b, bl, flags)
         }, string: pem)
       end
@@ -258,10 +255,11 @@ module Botan
                            iterations: Botan::DEFAULT_KDF_ITERATIONS,
                            rng: Botan::RNG.new)
         flags = pem ? 1 : 0
-        Botan.call_ffi_with_buffer(lambda {|b, bl|
+        Botan.call_ffi_with_buffer(lambda { |b, bl|
           LibBotan.botan_privkey_export_encrypted_pbkdf_iter(
             @ptr, b, bl, rng.ptr, password, iterations,
-            cipher, pbkdf, flags)
+            cipher, pbkdf, flags
+          )
         }, string: pem)
       end
 
@@ -273,12 +271,13 @@ module Botan
                                  rng: Botan::RNG.new)
         flags = pem ? 1 : 0
         iterations_ptr = FFI::MemoryPointer.new(:size_t)
-        data = Botan.call_ffi_with_buffer(lambda {|b, bl|
+        data = Botan.call_ffi_with_buffer(lambda { |b, bl|
           LibBotan.botan_privkey_export_encrypted_pbkdf_msec(
             @ptr, b, bl, rng.ptr, password, milliseconds,
-            iterations_ptr, cipher, pbkdf, flags)
+            iterations_ptr, cipher, pbkdf, flags
+          )
         }, string: pem)
-        {data: data, iterations: iterations_ptr.read(:size_t)}
+        { data: data, iterations: iterations_ptr.read(:size_t) }
       end
     end # class
   end # module

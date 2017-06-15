@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'botan'
 
 key = Botan::KDF.kdf(algo: 'KDF2(SHA-160)',

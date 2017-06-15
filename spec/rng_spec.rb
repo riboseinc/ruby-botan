@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'spec_helper'
 
@@ -18,7 +18,7 @@ describe Botan::RNG do
   end
 
   it 'produces an output of the requested size' do
-    expect(rng.get(50).bytesize).to eql 50
+    expect(rng.get(50).bytesize).to be 50
   end
 end
 

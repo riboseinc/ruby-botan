@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'ffi'
 
@@ -15,9 +15,7 @@ module Botan
       # @api private
       attr_reader :ptr
       def initialize(ptr)
-        if ptr.null?
-          raise Botan::Error, 'PublicKey received a NULL pointer'
-        end
+        raise Botan::Error, 'PublicKey received a NULL pointer' if ptr.null?
         @ptr = FFI::AutoPointer.new(ptr, self.class.method(:destroy))
       end
 
@@ -50,7 +48,7 @@ module Botan
       #
       # @return [String]
       def algo
-        Botan.call_ffi_with_buffer(lambda {|b, bl|
+        Botan.call_ffi_with_buffer(lambda { |b, bl|
           LibBotan.botan_pubkey_algo_name(@ptr, b, bl)
         }, guess: 32, string: true)
       end
@@ -77,7 +75,7 @@ module Botan
       #
       # @param hash [String] the hash algorithm to use for the calculation
       # @return [String]
-      def fingerprint(hash='SHA-256')
+      def fingerprint(hash = 'SHA-256')
         n = Botan::Digest.new(hash).length
         buf = FFI::MemoryPointer.new(:uint8, n)
         buf_len_ptr = FFI::MemoryPointer.new(:size_t)
@@ -92,11 +90,11 @@ module Botan
       # @param thorough [Boolean] whether to perform more thorough checks
       #   that may be slower
       # @return [Boolean] true if the key appears to be valid
-      def valid?(rng=nil, thorough=false)
+      def valid?(rng = nil, thorough = false)
         rng ||= Botan::RNG.new
         flags = thorough ? 1 : 0
         rc = LibBotan.botan_pubkey_check_key(@ptr, rng.ptr, flags)
-        rc == 0
+        rc.zero?
       end
 
       # Retrieves a field of key material.
@@ -112,12 +110,12 @@ module Botan
         Botan.call_ffi(:botan_mp_init, mp_ptr)
         mp = mp_ptr.read_pointer
         Botan.call_ffi(:botan_pubkey_get_field, mp, @ptr, field)
-        hex_str = Botan.call_ffi_with_buffer(lambda {|b,bl|
+        hex_str = Botan.call_ffi_with_buffer(lambda { |b, bl|
           LibBotan.botan_mp_to_str(mp, 16, b, bl)
         }, string: true)
         hex_str.hex
       ensure
-        LibBotan.botan_mp_destroy(mp) if mp and not mp.null?
+        LibBotan.botan_mp_destroy(mp) if mp && !mp.null?
       end
 
       # Encrypts data using the key.
@@ -150,7 +148,7 @@ module Botan
 
       def export(pem:)
         flags = pem ? 1 : 0
-        Botan.call_ffi_with_buffer(lambda {|b, bl|
+        Botan.call_ffi_with_buffer(lambda { |b, bl|
           LibBotan.botan_pubkey_export(@ptr, b, bl, flags)
         }, string: pem)
       end

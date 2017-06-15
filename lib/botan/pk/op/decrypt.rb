@@ -1,6 +1,6 @@
-# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 # (c) 2017 Ribose Inc.
-#
 
 require 'ffi'
 
@@ -19,7 +19,7 @@ module Botan
       # @param padding [String] the padding method name
       def initialize(key:, padding: nil)
         padding ||= Botan::DEFAULT_EME
-        if not key.instance_of?(PrivateKey)
+        unless key.instance_of?(PrivateKey)
           raise Botan::Error, 'Decryption requires an instance of PrivateKey'
         end
         ptr = FFI::MemoryPointer.new(:pointer)
@@ -44,7 +44,7 @@ module Botan
       # @return [String] the decrypted data
       def decrypt(msg)
         msg_buf = FFI::MemoryPointer.from_data(msg)
-        Botan.call_ffi_with_buffer(lambda {|b, bl|
+        Botan.call_ffi_with_buffer(lambda { |b, bl|
           LibBotan.botan_pk_op_decrypt(@ptr, b, bl, msg_buf, msg_buf.size)
         })
       end
