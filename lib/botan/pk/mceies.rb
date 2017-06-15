@@ -2,6 +2,9 @@
 # (c) 2017 Ribose Inc.
 #
 
+require 'ffi'
+
+require 'botan/ffi/libbotan'
 require 'botan/utils'
 
 module Botan

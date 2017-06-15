@@ -2,7 +2,13 @@
 # (c) 2017 Ribose Inc.
 #
 
+require 'ffi'
 require 'forwardable'
+
+require 'botan/error'
+require 'botan/ffi/libbotan'
+require 'botan/pk/publickey'
+require 'botan/utils'
 
 module Botan
   module PK

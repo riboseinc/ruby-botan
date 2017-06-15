@@ -3,6 +3,11 @@
 #
 
 require 'digest'
+require 'ffi'
+
+require 'botan/error'
+require 'botan/ffi/libbotan'
+require 'botan/utils'
 
 module Botan
   # Class for calculating message digests using Botan's hash functions.

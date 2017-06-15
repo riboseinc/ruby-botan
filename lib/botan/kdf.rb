@@ -2,6 +2,10 @@
 # (c) 2017 Ribose Inc.
 #
 
+require 'ffi'
+
+require 'botan/utils'
+
 module Botan
   # Key Derivation Functions
   #

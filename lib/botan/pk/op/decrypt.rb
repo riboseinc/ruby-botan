@@ -2,6 +2,13 @@
 # (c) 2017 Ribose Inc.
 #
 
+require 'ffi'
+
+require 'botan/error'
+require 'botan/ffi/libbotan'
+require 'botan/pk/privatekey'
+require 'botan/utils'
+
 module Botan
   module PK
     # Public Key Decrypt Operation

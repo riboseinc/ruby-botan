@@ -2,6 +2,11 @@
 # (c) 2017 Ribose Inc.
 #
 
+require 'ffi'
+
+require 'botan/rng'
+require 'botan/utils'
+
 module Botan
   # bcrypt password hashing
   #

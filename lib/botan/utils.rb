@@ -2,6 +2,11 @@
 # (c) 2017 Ribose Inc.
 #
 
+require 'ffi'
+
+require 'botan/error'
+require 'botan/ffi/libbotan'
+
 module Botan
   # @api private
   #

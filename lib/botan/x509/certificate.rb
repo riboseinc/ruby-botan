@@ -3,6 +3,12 @@
 #
 
 require 'date'
+require 'ffi'
+
+require 'botan/error'
+require 'botan/ffi/libbotan'
+require 'botan/pk/publickey'
+require 'botan/utils'
 
 module Botan
   module X509
