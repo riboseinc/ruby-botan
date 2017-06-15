@@ -27,6 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "codecov", "~> 0.1"
   spec.add_development_dependency "yard", "~> 0.8.7"
   spec.add_development_dependency 'redcarpet', '~> 3.4'
+  spec.add_development_dependency 'rubocop', '~> 0.49.1'
 
   spec.add_runtime_dependency "ffi", "~> 1.9"
 end
