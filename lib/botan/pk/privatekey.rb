@@ -7,7 +7,10 @@ require 'forwardable'
 
 require 'botan/error'
 require 'botan/ffi/libbotan'
+require 'botan/pk/op/decrypt'
+require 'botan/pk/op/sign'
 require 'botan/pk/publickey'
+require 'botan/rng'
 require 'botan/utils'
 
 module Botan

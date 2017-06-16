@@ -4,6 +4,7 @@
 
 require 'ffi'
 
+require 'botan/defaults'
 require 'botan/error'
 require 'botan/ffi/libbotan'
 require 'botan/pk/privatekey'

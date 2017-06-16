@@ -6,6 +6,9 @@ require 'ffi'
 
 require 'botan/error'
 require 'botan/ffi/libbotan'
+require 'botan/pk/op/encrypt'
+require 'botan/pk/op/verify'
+require 'botan/rng'
 require 'botan/utils'
 
 module Botan

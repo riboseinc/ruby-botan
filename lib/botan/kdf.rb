@@ -4,6 +4,7 @@
 
 require 'ffi'
 
+require 'botan/defaults'
 require 'botan/utils'
 
 module Botan
