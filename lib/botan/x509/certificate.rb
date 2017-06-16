@@ -57,9 +57,9 @@ module Botan
         }, guess: 16, string: true)
         case time.size
         when 13
-          DateTime.strptime(time, '%y%m%d%H%M%SZ')
+          ::DateTime.strptime(time, '%y%m%d%H%M%SZ')
         when 15
-          DateTime.strptime(time, '%Y%m%d%H%M%SZ')
+          ::DateTime.strptime(time, '%Y%m%d%H%M%SZ')
         else
           raise Botan::Error, 'X509::Certificate time_expires invalid format'
         end

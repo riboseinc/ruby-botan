@@ -17,7 +17,7 @@ module Botan
   module PK
     # Private Key
     class PrivateKey
-      extend Forwardable
+      extend ::Forwardable
       delegate %i[algo encrypt estimated_strength verify] => :public_key
       # @!method algo
       #   @see Botan::PK::PublicKey#algo
