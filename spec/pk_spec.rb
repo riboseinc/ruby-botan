@@ -62,26 +62,26 @@ describe 'PK' do
     end
 
     it 'can export the private key' do
-      expect(priv.export_pem.length).to be >= 1
-      expect(priv.export_der.length).to be >= 1
+      expect(priv.export_pem!.length).to be >= 1
+      expect(priv.export_der!.length).to be >= 1
     end
 
     it 'can export the private key (encrypted PEM)' do
-      exported_pem = priv.export_encrypted_pem(password: 'test')
+      exported_pem = priv.export_pem(password: 'test')
       expect(exported_pem.length).to be >= 1
 
-      export = priv.export_encrypted_pem_timed(password: 'test',
-                                               milliseconds: 5)
+      export = priv.export_pem_timed(password: 'test',
+                                     milliseconds: 5)
       expect(export[:data].length).to be >= 1
       expect(export[:iterations]).to be >= 1
     end
 
     it 'can export the private key (encrypted DER)' do
-      exported_pem = priv.export_encrypted_der(password: 'test')
+      exported_pem = priv.export_der(password: 'test')
       expect(exported_pem.length).to be >= 1
 
-      export = priv.export_encrypted_der_timed(password: 'test',
-                                               milliseconds: 5)
+      export = priv.export_der_timed(password: 'test',
+                                     milliseconds: 5)
       expect(export[:data].length).to be >= 1
       expect(export[:iterations]).to be >= 1
     end
@@ -168,8 +168,8 @@ describe 'PK' do
     end
 
     it 'can export the private key' do
-      expect(priv.export_pem.length).to be >= 1
-      expect(priv.export_der.length).to be >= 1
+      expect(priv.export_pem!.length).to be >= 1
+      expect(priv.export_der!.length).to be >= 1
     end
 
     it 'can sign and verify' do

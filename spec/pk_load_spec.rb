@@ -16,18 +16,18 @@ describe 'PK loading' do
     end
 
     it 'exports correctly' do
-      expect(key.export_pem).to eql private_key_pem
+      expect(key.export_pem!).to eql private_key_pem
     end
 
     it 'can be exported (encrypted) and loaded again' do
-      exported = key.export_encrypted_pem(password: 'right')
+      exported = key.export_pem(password: 'right')
 
       expect do
         Botan::PK::PrivateKey.from_data(exported, password: 'wrong')
       end.to raise_error Botan::Error
 
       reloaded = Botan::PK::PrivateKey.from_data(exported, password: 'right')
-      expect(reloaded.export_pem.length).to be >= 1
+      expect(reloaded.export_pem!.length).to be >= 1
     end
   end
 

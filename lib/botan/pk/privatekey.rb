@@ -81,14 +81,14 @@ module Botan
       # Exports the *unencrypted* key with PEM encoding.
       #
       # @return [String]
-      def export_pem
+      def export_pem!
         export(pem: true)
       end
 
       # Exports the *unencrypted* key with DER encoding.
       #
       # @return [String]
-      def export_der
+      def export_der!
         export(pem: false)
       end
 
@@ -100,11 +100,11 @@ module Botan
       # @param iterations [Integer] the number of iterations for PBKDF
       # @param rng [Botan::RNG] the RNG to use
       # @return [String]
-      def export_encrypted_pem(password:,
-                               cipher: nil,
-                               pbkdf: nil,
-                               iterations: Botan::DEFAULT_KDF_ITERATIONS,
-                               rng: Botan::RNG.new)
+      def export_pem(password:,
+                     cipher: nil,
+                     pbkdf: nil,
+                     iterations: Botan::DEFAULT_KDF_ITERATIONS,
+                     rng: Botan::RNG.new)
         export_encrypted(password: password,
                          pem: true,
                          cipher: cipher,
@@ -121,11 +121,11 @@ module Botan
       # @param iterations [Integer] the number of iterations for PBKDF
       # @param rng [Botan::RNG] the RNG to use
       # @return [String]
-      def export_encrypted_der(password:,
-                               cipher: nil,
-                               pbkdf: nil,
-                               iterations: Botan::DEFAULT_KDF_ITERATIONS,
-                               rng: Botan::RNG.new)
+      def export_der(password:,
+                     cipher: nil,
+                     pbkdf: nil,
+                     iterations: Botan::DEFAULT_KDF_ITERATIONS,
+                     rng: Botan::RNG.new)
         export_encrypted(password: password,
                          pem: true,
                          cipher: cipher,
@@ -145,11 +145,11 @@ module Botan
       # @return [Hash<Symbol>]
       #   * :iterations [Integer] the iteration count used
       #   * :data [String] the PEM-encoded key
-      def export_encrypted_pem_timed(password:,
-                                     milliseconds:,
-                                     cipher: nil,
-                                     pbkdf: nil,
-                                     rng: Botan::RNG.new)
+      def export_pem_timed(password:,
+                           milliseconds:,
+                           cipher: nil,
+                           pbkdf: nil,
+                           rng: Botan::RNG.new)
         export_encrypted_timed(password: password,
                                pem: true,
                                milliseconds: milliseconds,
@@ -169,11 +169,11 @@ module Botan
       # @return [Hash<Symbol>]
       #   * :iterations [Integer] the iteration count used
       #   * :data [String] the DER-encoded key
-      def export_encrypted_der_timed(password:,
-                                     milliseconds:,
-                                     cipher: nil,
-                                     pbkdf: nil,
-                                     rng: Botan::RNG.new)
+      def export_der_timed(password:,
+                           milliseconds:,
+                           cipher: nil,
+                           pbkdf: nil,
+                           rng: Botan::RNG.new)
         export_encrypted_timed(password: password,
                                pem: false,
                                milliseconds: milliseconds,
