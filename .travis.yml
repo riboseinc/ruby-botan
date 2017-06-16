@@ -23,3 +23,5 @@ cache:
 before_install:
   - gem install bundler -v 1.13.7
   - ./ci/install.sh
+
+script: bundle exec rubocop && bundle exec rake
