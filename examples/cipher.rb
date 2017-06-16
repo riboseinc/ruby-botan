@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require 'botan'
+require 'botan/cipher'
+require 'botan/rng'
 
 # encrypt
 enc = Botan::Cipher.encryption('AES-128/CBC/PKCS7')

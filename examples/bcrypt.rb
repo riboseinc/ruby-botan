@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'botan'
+require 'botan/bcrypt'
 
 print 'Enter a new password: '
 phash = Botan::BCrypt.hash(gets.chomp, work_factor: 10)

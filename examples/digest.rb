@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'botan'
+require 'botan/digest'
 
 md5 = Botan::Digest::MD5.new
 md5 << 'some '

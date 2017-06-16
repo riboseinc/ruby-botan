@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require 'botan'
+require 'botan/kdf'
+require 'botan/rng'
 
 key = Botan::KDF.kdf(algo: 'KDF2(SHA-160)',
                      secret: Botan::RNG.get(9),
