@@ -4,6 +4,7 @@
 
 require 'ffi'
 
+# @api private
 module LibBotan
   extend FFI::Library
   ffi_lib 'libbotan-2'

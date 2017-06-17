@@ -89,9 +89,9 @@ module Botan
     "#<#{class_name}:#{ptr_s}>"
   end
 
-  # @api private
   # TODO: Upstream this.
   unless FFI::MemoryPointer.respond_to?(:from_data)
+    # @api private
     class << FFI::MemoryPointer
       def from_data(data)
         buf = FFI::MemoryPointer.new(:uint8, data.bytesize)
