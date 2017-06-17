@@ -23,7 +23,7 @@ ruby-botan is currently tested to work with:
 
 The samples below are meant to be a brief introduction to the library. Refer to the full documentation for full details.
 
-Also see the [examples](examples/) directory for examples on using various parts of the library.
+Also see the [examples](https://github.com/riboseinc/ruby-botan/tree/master/examples) directory for examples on using various parts of the library.
 
 ## Utilities
 
