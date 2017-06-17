@@ -1,4 +1,4 @@
-# ruby-botan
+# ruby-botan [![codecov.io](https://codecov.io/github/riboseinc/ruby-botan/coverage.svg?branch=master)](https://codecov.io/github/riboseinc/ruby-botan?branch=master)
 
 ruby-botan is a Ruby interface to [Botan](https://botan.randombit.net/).
 
