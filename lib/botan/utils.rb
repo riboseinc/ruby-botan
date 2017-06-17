@@ -8,6 +8,22 @@ require 'botan/error'
 require 'botan/ffi/libbotan'
 
 module Botan
+  # Encodes the provided data as a hexadecimal string.
+  #
+  # @param data [String] the data to encode
+  # @return [String] the data as a hexadecimal string
+  def self.hex_encode(data)
+    data.unpack('H*')[0]
+  end
+
+  # Decodes the provided hexadecimal string to a byte string.
+  #
+  # @param hexs [String] the hexadecimal string
+  # @return [String] the decoded data
+  def self.hex_decode(hexs)
+    [hexs].pack('H*')
+  end
+
   # @api private
   #
   # Calls the LibBotan FFI function indicated and returns the return code.
@@ -65,6 +81,7 @@ module Botan
     end
   end
 
+  # @api private
   def self.inspect_ptr(myself)
     ptr_format = "0x%0#{FFI::Pointer.size * 2}x"
     ptr_s = format(ptr_format, myself.instance_variable_get(:@ptr).address)
@@ -82,22 +99,6 @@ module Botan
         buf
       end
     end
-  end
-
-  # Encodes the provided data as a hexadecimal string.
-  #
-  # @param data [String] the data to encode
-  # @return [String] the data as a hexadecimal string
-  def self.hex_encode(data)
-    data.unpack('H*')[0]
-  end
-
-  # Decodes the provided hexadecimal string to a byte string.
-  #
-  # @param hexs [String] the hexadecimal string
-  # @return [String] the decoded data
-  def self.hex_decode(hexs)
-    [hexs].pack('H*')
   end
 end # module
 
