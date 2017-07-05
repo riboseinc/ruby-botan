@@ -18,6 +18,8 @@ Gem::Specification.new do |spec|
   spec.extra_rdoc_files = %w[README.md LICENSE.txt]
   spec.require_paths = ['lib']
 
+  spec.required_ruby_version = '>= 2.3.0'
+
   spec.has_rdoc = 'yard'
   spec.metadata['yard.run'] = 'yard'
 
