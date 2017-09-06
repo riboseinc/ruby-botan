@@ -37,6 +37,10 @@ module LibBotan
           ' version of the Ruby module'
   end
 
+  LIB_VERSION = [botan_version_major, \
+                 botan_version_minor, \
+                 botan_version_patch].freeze
+
   # Utility Functions
   attach_function :botan_same_mem,
                   %i[pointer pointer size_t],
