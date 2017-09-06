@@ -12,7 +12,8 @@ branches:
 
 env:
   global:
-    - BOTAN_INSTALL="$HOME/builds/botan-install"
+    - LOCAL_BUILDS="$HOME/local-builds"
+    - BOTAN_INSTALL="${LOCAL_BUILDS}/botan-install"
     - LD_LIBRARY_PATH="${BOTAN_INSTALL}/lib"
 
 cache:
