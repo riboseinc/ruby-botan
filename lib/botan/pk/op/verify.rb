@@ -55,8 +55,15 @@ module Botan
       # @return [Boolean] true if the signature is valid
       def check_signature(signature)
         sig_buf = FFI::MemoryPointer.from_data(signature)
-        rc = Botan.call_ffi_rc(:botan_pk_op_verify_finish,
-                               @ptr, sig_buf, sig_buf.size)
+        # workaround 2.2.0 release bug
+        if LibBotan::LIB_VERSION == [2, 2, 0]
+          rc = LibBotan.botan_pk_op_verify_finish(@ptr, sig_buf, sig_buf.size)
+          raise Botan::Error, 'FFI call unexpectedly failed' \
+            unless [0, -1].include?(rc)
+        else
+          rc = Botan.call_ffi_rc(:botan_pk_op_verify_finish,
+                                 @ptr, sig_buf, sig_buf.size)
+        end
         rc.zero?
       end
 
