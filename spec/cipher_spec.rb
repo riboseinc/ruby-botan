@@ -107,7 +107,7 @@ describe Botan::Cipher do
     end
 
     it 'has expected update granularity' do
-      expect(enc.update_granularity).to be 64
+      expect(enc.update_granularity).to be >= 64
     end
 
     it 'encrypts and decrypts successfully' do
