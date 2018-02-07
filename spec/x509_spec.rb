@@ -57,7 +57,7 @@ Q8WpvOE='
       expect(cert.subject_info('Organizational Unit')).to eql 'bsi'
       expect(cert.subject_info('SerialNumber')).to eql '4567'
       expect(cert.subject_info('Name')).to eql 'csca-germany'
-      expect(cert.subject_info('Email')).to eql 'csca-germany@bsi.bund.de'
+      expect(cert.subject_info('RFC822')).to eql 'csca-germany@bsi.bund.de'
     end
 
     it 'has correct issuer fields' do
@@ -130,7 +130,7 @@ Q8WpvOE='
       expect(cert.subject_info('Organizational Unit')).to eql 'bsi'
       expect(cert.subject_info('SerialNumber')).to eql '4567'
       expect(cert.subject_info('Name')).to eql 'csca-germany'
-      expect(cert.subject_info('Email')).to eql 'csca-germany@bsi.bund.de'
+      expect(cert.subject_info('RFC822')).to eql 'csca-germany@bsi.bund.de'
     end
 
     it 'has correct issuer fields' do
