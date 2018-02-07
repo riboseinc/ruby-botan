@@ -17,6 +17,8 @@ env:
     - LD_LIBRARY_PATH="${BOTAN_INSTALL}/lib"
   matrix:
     - BOTAN_VERSION=2.2.0
+    - BOTAN_VERSION=2.3.0
+    - BOTAN_VERSION=2.4.0
 
 cache:
   bundler: true
