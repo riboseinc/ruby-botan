@@ -12,7 +12,7 @@ ruby-botan is a Ruby interface to [Botan](https://botan.randombit.net/).
 
 ruby-botan is currently tested to work with:
 
-* Ruby 2.3
+* Ruby 2.5
 * Ruby 2.4
 
 ## Botan

@@ -3,8 +3,8 @@ sudo: false
 language: ruby
 
 rvm:
-  - 2.4.0
-  - 2.3.4
+  - 2.5.5
+  - 2.4.6
 
 branches:
   only:
@@ -19,7 +19,12 @@ env:
     - BOTAN_VERSION=2.2.0
     - BOTAN_VERSION=2.3.0
     - BOTAN_VERSION=2.4.0
+    - BOTAN_VERSION=2.5.0
+    - BOTAN_VERSION=2.6.0
     - BOTAN_VERSION=2.7.0
+    - BOTAN_VERSION=2.8.0
+    - BOTAN_VERSION=2.9.0
+    - BOTAN_VERSION=2.10.0
 
 cache:
   bundler: true
