@@ -1,0 +1,65 @@
+name: Tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+env:
+  MAKE_PARALLEL: 2
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        ruby: [2.5.x, 2.6.x]
+        botan:
+          - 2.2.0 # has a specific bug workaround
+          - 2.13.0
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Set environment
+      run: |
+        . ci/setup-env.inc.sh
+
+    - name: Install build tools
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew install autoconf automake libtool
+
+    - name: Cache
+      id: cache
+      uses: actions/cache@v1
+      with:
+        path: ${{ env.CACHE_DIR }}
+        key: ${{ matrix.os }}-botan-${{ matrix.botan }}-${{ hashFiles('ci/**') }}-${{ hashFiles('.github/workflows/**') }}
+    - name: Build cache
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        # botan
+        git clone --depth 1 --branch "${{ matrix.botan }}" https://github.com/randombit/botan "${{ runner.temp }}/botan"
+        cd "${{ runner.temp }}/botan"
+        ./configure.py --prefix="${BOTAN_INSTALL}" --with-debug-info
+        make -j${MAKE_PARALLEL} install
+
+    - name: Set up Ruby
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+
+    - name: Workaround macOS SIP
+      if: matrix.os == 'macos-latest'
+      run: |
+        sudo cp -a "$BOTAN_INSTALL/lib"/* /usr/local/lib
+
+    - name: Run tests
+      run: |
+        gem install bundler
+        bundle install --jobs 4 --retry 3
+        export LD_LIBRARY_PATH="$BOTAN_INSTALL/lib"
+        bundle exec rake
+
