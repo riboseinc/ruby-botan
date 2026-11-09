@@ -7,7 +7,7 @@ require 'ffi'
 # @api private
 module LibBotan
   extend FFI::Library
-  ffi_lib 'libbotan-2'
+  ffi_lib 'libbotan-3', 'libbotan-2'
 
   # Versioning
   attach_function :botan_ffi_api_version,
