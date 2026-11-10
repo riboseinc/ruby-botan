@@ -9,6 +9,14 @@ require 'botan/utils'
 
 module Botan
   module PK
+    # McEliece (and with it mceies) was removed in Botan 3.0; guard with
+    # a clear message instead of a bare FFI failure.
+    def self.mceies_unavailable!
+      return if LibBotan.botan_version_major < 3
+
+      raise Botan::Error, 'McEliece support was removed in Botan 3; use a Botan 2 library for mceies'
+    end
+
     # Encrypts with McEliece.
     #
     # @param public_key [Botan::PK::PublicKey] the public key
@@ -20,6 +28,7 @@ module Botan
     def self.mceies_encrypt(public_key:, plaintext:, ad:,
                             aead: DEFAULT_AEAD,
                             rng: Botan::RNG.new)
+      mceies_unavailable!
       pt_buf = FFI::MemoryPointer.from_data(plaintext)
       ad_buf = FFI::MemoryPointer.from_data(ad)
       Botan.call_ffi_with_buffer(lambda { |b, bl|
@@ -44,6 +53,7 @@ module Botan
     # @return [String] the decrypted data
     def self.mceies_decrypt(private_key:, ciphertext:, ad:,
                             aead: DEFAULT_AEAD)
+      mceies_unavailable!
       ct_buf = FFI::MemoryPointer.from_data(ciphertext)
       ad_buf = FFI::MemoryPointer.from_data(ad)
       Botan.call_ffi_with_buffer(lambda { |b, bl|

@@ -5,6 +5,11 @@
 require 'spec_helper'
 
 describe 'mceies' do
+  # McEliece was removed in Botan 3.0.
+  before(:all) do
+    skip 'McEliece is not available in Botan 3' if LibBotan.botan_version_major >= 3
+  end
+
   let(:priv) do
     Botan::PK::PrivateKey.generate('McEliece',
                                    params: '2960,57',

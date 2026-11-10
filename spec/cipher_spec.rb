@@ -107,7 +107,10 @@ describe Botan::Cipher do
     end
 
     it 'has expected update granularity' do
-      expect(enc.update_granularity).to be >= 64
+      # Botan 2 reported 64 for CBC/PKCS7; Botan 3 reports the true
+      # block size.
+      expected = LibBotan.botan_version_major >= 3 ? 16 : 64
+      expect(enc.update_granularity).to be expected
     end
 
     it 'encrypts and decrypts successfully' do

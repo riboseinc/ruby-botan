@@ -73,7 +73,9 @@ describe 'PK' do
       export = priv.export_pem_timed(password: 'test',
                                      milliseconds: 5)
       expect(export[:data].length).to be >= 1
-      expect(export[:iterations]).to be >= 1
+      # Botan 3 defaults to scrypt, whose msec tuning reports 0
+      # iterations (the tunable is memory cost, not iterations).
+      expect(export[:iterations]).to be >= 1 if LibBotan.botan_version_major < 3
     end
 
     it 'can export the private key (encrypted DER)' do
@@ -83,7 +85,7 @@ describe 'PK' do
       export = priv.export_der_timed(password: 'test',
                                      milliseconds: 5)
       expect(export[:data].length).to be >= 1
-      expect(export[:iterations]).to be >= 1
+      expect(export[:iterations]).to be >= 1 if LibBotan.botan_version_major < 3
     end
 
     it 'can encrypt and decrypt (shortcut)' do

@@ -7,7 +7,24 @@ require 'ffi'
 # @api private
 module LibBotan
   extend FFI::Library
-  ffi_lib 'libbotan-3', 'libbotan-2'
+  # Botan 3 renamed the shared library to libbotan-3; prefer it when
+  # installed and fall back to the Botan 2 name. Set BOTAN_FFI_LIBRARY
+  # to an explicit path to pin a specific build (e.g. a source-built
+  # Botan >= 3.13 for the GCM-SIV specs).
+  botan_libraries = []
+  botan_libraries << ENV['BOTAN_FFI_LIBRARY'] if ENV['BOTAN_FFI_LIBRARY']
+  botan_libraries << 'libbotan-3'
+  botan_libraries << 'libbotan-2'
+  loaded_lib = nil
+  botan_libraries.each do |lib|
+    begin
+      loaded_lib = ffi_lib lib
+      break
+    rescue LoadError
+      nil
+    end
+  end
+  raise LoadError, "could not find libbotan (tried #{botan_libraries.join(', ')})" if loaded_lib.nil?
 
   # Versioning
   attach_function :botan_ffi_api_version,

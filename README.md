@@ -12,12 +12,19 @@ ruby-botan is a Ruby interface to [Botan](https://botan.randombit.net/).
 
 ruby-botan is currently tested to work with:
 
-* Ruby 2.5
-* Ruby 2.4
+* Ruby 3.1
+* Ruby 3.4
 
 ## Botan
 
-[Botan](https://botan.randombit.net/) version 2.2 or newer is required.
+[Botan](https://botan.randombit.net/) version 2.2 or newer is required;
+version **3.13 or newer** is needed for AES-GCM-SIV (RFC 8452) and is
+the recommended target. The FFI binding prefers `libbotan-3` and falls
+back to `libbotan-2`; set `BOTAN_FFI_LIBRARY` to an absolute path to
+pin a specific build (e.g. a source-built Botan for CI).
+
+McEliece (and the `mceies` helpers) were removed in Botan 3 and are
+only available against a Botan 2 library.
 
 # Basic Usage
 

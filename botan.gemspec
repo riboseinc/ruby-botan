@@ -18,19 +18,16 @@ Gem::Specification.new do |spec|
   spec.extra_rdoc_files = %w[README.md LICENSE.txt]
   spec.require_paths = ['lib']
 
-  spec.required_ruby_version = '>= 2.3.0'
+  spec.required_ruby_version = '>= 3.1'
 
-  spec.has_rdoc = 'yard'
   spec.metadata['yard.run'] = 'yard'
 
-  spec.add_development_dependency 'bundler', '>= 1.13', '< 3'
-  spec.add_development_dependency 'rake', '~> 10.0'
+  spec.add_development_dependency 'bundler'
+  spec.add_development_dependency 'rake'
   spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'simplecov', '~> 0.14'
-  spec.add_development_dependency 'codecov', '~> 0.1'
-  spec.add_development_dependency 'yard', '~> 0.9.11'
-  spec.add_development_dependency 'redcarpet', '~> 3.4'
-  spec.add_development_dependency 'rubocop', '~> 0.49.1'
+  spec.add_development_dependency 'simplecov'
+  spec.add_development_dependency 'yard'
+  spec.add_development_dependency 'rubocop'
 
   spec.add_runtime_dependency 'ffi', '~> 1.9'
 end
