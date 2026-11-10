@@ -110,6 +110,18 @@ dec.iv = iv
 plaintext = dec.finish(ciphertext)
 ```
 
+## AEAD - authenticated encryption
+
+The `Botan::Aead` module wraps one-shot authenticated encryption with a
+normalized wire format: the returned blob is always `ciphertext || tag`,
+regardless of the mode's native layout (SIV-family modes prefix the
+tag). Requires Botan >= 3.13 for `AES-*-GCM-SIV`.
+
+```ruby
+blob = Botan::Aead.encrypt('AES-256/GCM-SIV', key, nonce, 'my data', ad: 'header')
+plaintext = Botan::Aead.decrypt('AES-256/GCM-SIV', key, nonce, blob, ad: 'header')
+```
+
 ## BCrypt
 
 The `Botan::BCrypt` module supports simple bcrypt password hashing.

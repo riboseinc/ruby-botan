@@ -2,6 +2,7 @@
 
 # (c) 2017 Ribose Inc.
 
+require 'botan/aead'
 require 'botan/bcrypt'
 require 'botan/cipher'
 require 'botan/defaults'
