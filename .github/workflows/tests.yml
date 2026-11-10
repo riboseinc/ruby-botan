@@ -18,7 +18,10 @@ jobs:
         include:
           - { os: ubuntu-latest, ruby: '3.1', botan: '3.14.0' }
           - { os: ubuntu-latest, ruby: '3.4', botan: '3.14.0' }
-          - { os: ubuntu-latest, ruby: '3.4', botan: '2.13.0' }
+          # Botan <= 2.13 no longer compiles with modern GCC (its CLI
+          # sources trip -Wtemplate-body errors) and has no configure
+          # option to skip them, so the libbotan-2 fallback has no CI
+          # leg; it remains supported in lib/botan/ffi/libbotan.rb.
           - { os: macos-latest, ruby: '3.4', botan: '3.14.0' }
     runs-on: ${{ matrix.os }}
     steps:
