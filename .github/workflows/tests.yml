@@ -32,11 +32,17 @@ jobs:
           key: botan-${{ matrix.botan }}-${{ runner.os }}
 
       - name: Build Botan from source
-        if: steps.botan-cache.outputs.cache-hit != 'true'
         run: |
+          suffix=3
+          [ "${{ matrix.botan }}" = "2.13.0" ] && suffix=2
+          prefix="$HOME/botan-install"
+          if [ -e "$prefix/lib/libbotan-$suffix.dylib" ] || [ -e "$prefix/lib/libbotan-$suffix.so" ]; then
+            echo "Botan ${{ matrix.botan }} already installed"
+            exit 0
+          fi
           git clone --depth 1 --branch "${{ matrix.botan }}" https://github.com/randombit/botan.git /tmp/botan-src
           cd /tmp/botan-src
-          ./configure.py --prefix="$HOME/botan-install"
+          ./configure.py --prefix="$prefix"
           make -j${MAKE_PARALLEL} install
 
       - name: Set up Ruby
@@ -47,6 +53,8 @@ jobs:
       - name: Run tests
         run: |
           bundle install --jobs 4 --retry 3
-          export BOTAN_FFI_LIBRARY="$HOME/botan-install/lib/libbotan-3.dylib"
-          [ -e "$BOTAN_FFI_LIBRARY" ] || export BOTAN_FFI_LIBRARY="$HOME/botan-install/lib/libbotan-2.dylib"
+          suffix=3
+          [ "${{ matrix.botan }}" = "2.13.0" ] && suffix=2
+          export BOTAN_FFI_LIBRARY="$HOME/botan-install/lib/libbotan-$suffix.dylib"
+          [ -e "$BOTAN_FFI_LIBRARY" ] || export BOTAN_FFI_LIBRARY="$HOME/botan-install/lib/libbotan-$suffix.so"
           bundle exec rake
