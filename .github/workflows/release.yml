@@ -49,10 +49,14 @@ jobs:
       # Publishing to rubygems.org requires either OIDC trusted
       # publishing configured for this repository or a RUBYGEMS_API_KEY
       # secret. When neither is present the gem stays attached to the
-      # GitHub Release only.
+      # GitHub Release only. (The secrets context is not usable in
+      # step-level `if:` conditionals, hence the shell check.)
       - name: publish to rubygems (optional)
-        if: ${{ secrets.RUBYGEMS_API_KEY != '' }}
         run: |
+          if [ -z "$RUBYGEMS_API_KEY" ]; then
+            echo "RUBYGEMS_API_KEY not configured; skipping gem push"
+            exit 0
+          fi
           gem push stage/botan-*.gem
         env:
           RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
