@@ -6,6 +6,16 @@ ruby-botan is a Ruby interface to [Botan](https://botan.randombit.net/).
 
 > You should have some knowledge of cryptography **before** trying to use the library. This is an area where it is very easy to make mistakes, and where things are often subtle and/or counterintuitive. Obviously the library tries to provide things at a high level precisely to minimize the number of ways things can go wrong, but naive use will almost certainly not result in a secure system.
 
+# Versioning
+
+ruby-botan versions follow `{botan major}.{botan minor}.{ruby-botan local}`:
+the major.minor pair tracks the baseline Botan release the gem targets
+(3.13 — the first release with RFC 8452 AES-GCM-SIV), and the patch
+component is ruby-botan's own iteration counter on top of that baseline.
+When the required Botan baseline moves (e.g. to 3.14), the gem moves to
+3.14.x. Gem tags are `v<version>` (e.g. `v3.13.2`); pushing a tag builds
+the gem and attaches it to the GitHub Release.
+
 # Requirements
 
 ## Ruby
