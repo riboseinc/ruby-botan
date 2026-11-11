@@ -1,0 +1,58 @@
+name: release
+
+on:
+  push:
+    tags: [ v* ]
+
+permissions:
+  contents: write
+
+jobs:
+  gem:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+
+      - name: verify tag matches gem version
+        run: |
+          version=$(ruby -r ./lib/botan/version -e 'puts Botan::VERSION')
+          if [ "v${version}" != "${{ github.ref_name }}" ]; then
+            echo "tag ${{ github.ref_name }} does not match gem version ${version}" >&2
+            exit 1
+          fi
+
+      - name: build gem
+        run: |
+          gem build botan.gemspec
+          mkdir -p stage
+          mv botan-*.gem stage/
+
+      - name: compute sha256
+        run: |
+          cd stage
+          sha256sum * > SHA256SUMS
+          cat SHA256SUMS
+
+      - name: upload to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: stage/*
+          fail_on_unmatched_files: true
+
+      # Publishing to rubygems.org requires either OIDC trusted
+      # publishing configured for this repository or a RUBYGEMS_API_KEY
+      # secret. When neither is present the gem stays attached to the
+      # GitHub Release only.
+      - name: publish to rubygems (optional)
+        if: ${{ secrets.RUBYGEMS_API_KEY != '' }}
+        run: |
+          gem push stage/botan-*.gem
+        env:
+          RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
